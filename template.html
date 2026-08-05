@@ -1765,7 +1765,7 @@ initTerminal();
 
 /* ---------- PWA: service worker ---------- */
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('linux-roadmap-sw.js', { scope: '/' })
+  navigator.serviceWorker.register('linux-roadmap-sw.js')
     .then(reg => { if(reg.active) console.log('[PWA] SW active:', reg.scope); })
     .catch(() => {});
 }
