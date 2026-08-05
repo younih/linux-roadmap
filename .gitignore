@@ -1,0 +1,15 @@
+# سورس (فقط برای بیلد — در خروجی نیستند)
+build.js
+template.html
+README-fa.md
+deploy.sh
+
+# سیستمی
+.freebuff/
+*.db
+*.db-shm
+*.db-wal
+node_modules/
+.DS_Store
+Thumbs.db
+*.log

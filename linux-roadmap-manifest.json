@@ -1,0 +1,30 @@
+{
+  "name": "نقشه راه لینوکس — دوره تعاملی",
+  "short_name": "نقشه راه لینوکس",
+  "description": "دوره تعاملی یادگیری لینوکس از صفر تا مدیریت سیستم — شامل ۵۸ بخش، ترمینال شبیه‌سازی‌شده، فلش‌کارت با تکرار فاصله‌دار و نمودارهای SVG",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b0f17",
+  "theme_color": "#0b0f17",
+  "lang": "fa",
+  "dir": "rtl",
+  "categories": ["education", "development"],
+  "icons": [
+    {
+      "src": "linux-roadmap-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "linux-roadmap-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "form_factor": "wide",
+      "label": "نمای دوره"
+    }
+  ]
+}
