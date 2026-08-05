@@ -1,9 +1,3 @@
-# سورس (فقط برای بیلد — در خروجی نیستند)
-build.js
-template.html
-README-fa.md
-deploy.sh
-
 # سیستمی
 .freebuff/
 *.db

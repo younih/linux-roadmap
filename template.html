@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>نقشه راه لینوکس 🐧 — دوره تعاملی</title>
+<meta name="description" content="دوره تعاملی یادگیری لینوکس از صفر تا مدیریت سیستم — ۵۸ بخش، ترمینال شبیه‌سازی‌شده، فلش‌کارت با تکرار فاصله‌دار">
+<meta name="theme-color" content="#0b0f17">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="نقشه راه لینوکس">
+<link rel="manifest" href="linux-roadmap-manifest.json">
+<link rel="icon" type="image/svg+xml" href="linux-roadmap-icon.svg">
+<link rel="apple-touch-icon" href="linux-roadmap-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f17; --bg2:#101623; --card:#151d2e; --card2:#1b2437;
+  --line:#26314a; --line2:#33405f;
+  --tx:#e8edf7; --tx2:#9facc7; --tx3:#6b7894;
+  --acc:#34d399; --acc2:#10b981; --acc-dim:rgba(52,211,153,.14);
+  --amber:#fbbf24; --amber-dim:rgba(251,191,36,.12);
+  --blue:#60a5fa; --blue-dim:rgba(96,165,250,.12);
+  --red:#f87171; --red-dim:rgba(248,113,113,.12);
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Vazirmatn",Tahoma,"Segoe UI",sans-serif;
+  background:var(--bg); color:var(--tx); line-height:1.9; font-size:15px;
+  background-image:radial-gradient(1200px 600px at 80% -10%, rgba(16,185,129,.07), transparent 60%),
+                   radial-gradient(900px 500px at 10% 110%, rgba(96,165,250,.05), transparent 60%);
+  min-height:100vh;
+}
+::selection{background:rgba(52,211,153,.3)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#45547a}
+
+.layout{display:grid;grid-template-columns:330px 1fr;min-height:100vh}
+/* ---------- sidebar ---------- */
+aside{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  background:linear-gradient(180deg,var(--bg2),var(--bg));
+  border-inline-start:1px solid var(--line);
+  padding:22px 18px 40px; direction:rtl;
+}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.brand .logo{font-size:26px}
+.brand h1{font-size:17px;font-weight:800}
+.brand small{display:block;color:var(--tx3);font-size:11.5px;font-weight:400;margin-top:2px}
+.progress-wrap{margin:14px 0 16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.progress-head .lbl{font-size:12.5px;color:var(--tx2);font-weight:600}
+.progress-head .pct{font-size:15px;font-weight:800;color:var(--acc)}
+.progress-bar{height:9px;background:var(--bg2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.progress-bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.search-box{position:relative;margin-bottom:14px}
+.search-box input{
+  width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;
+  color:var(--tx);padding:10px 38px 10px 12px;font-family:inherit;font-size:13.5px;outline:none;transition:.2s;
+}
+.search-box input:focus{border-color:var(--acc2);box-shadow:0 0 0 3px var(--acc-dim)}
+.search-box .ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:14px}
+.search-results{display:none;position:absolute;top:calc(100% + 6px);right:0;left:0;background:var(--card2);
+  border:1px solid var(--line);border-radius:12px;z-index:50;max-height:320px;overflow-y:auto;box-shadow:0 18px 40px rgba(0,0,0,.5)}
+.search-results.open{display:block}
+.search-results a{display:block;padding:9px 12px;font-size:12.8px;color:var(--tx2);text-decoration:none;border-bottom:1px solid var(--line)}
+.search-results a:last-child{border-bottom:none}
+.search-results a:hover{background:var(--bg2);color:var(--acc)}
+.search-results a b{color:var(--acc);font-weight:700}
+.search-results .sr-note{padding:10px 12px;color:var(--tx3);font-size:12px}
+nav{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+nav button{
+  flex:1;min-width:70px;background:var(--card);border:1px solid var(--line);color:var(--tx2);
+  border-radius:10px;padding:7px 6px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;
+}
+nav button:hover{border-color:var(--line2);color:var(--tx)}
+nav button.active{background:var(--acc-dim);border-color:var(--acc2);color:var(--acc)}
+.grp{margin:14px 0 6px}
+.grp-h{display:flex;justify-content:space-between;align-items:center;padding:4px 6px;font-size:12px;font-weight:800;color:var(--tx3);letter-spacing:.3px}
+.grp-h .gprog{font-size:10.5px;color:var(--tx3);font-weight:600}
+.sec-list{display:flex;flex-direction:column;gap:2px}
+.sec-item{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;
+  color:var(--tx2);font-size:13px;text-decoration:none;transition:.15s;border:1px solid transparent;
+}
+.sec-item:hover{background:var(--card);color:var(--tx)}
+.sec-item.active{background:var(--card2);border-color:var(--line2);color:var(--tx)}
+.sec-item .num{flex:none;width:26px;height:26px;border-radius:8px;background:var(--bg2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--tx2);transition:.2s}
+.sec-item.done .num{background:var(--acc-dim);border-color:var(--acc2);color:var(--acc)}
+.sec-item.done{color:var(--tx3)}
+.sec-item .t{flex:1;line-height:1.5}
+.sec-item .dot{margin-inline-start:auto;flex:none;width:16px;height:16px;border-radius:50%;border:2px solid var(--line2);transition:.2s}
+.sec-item.done .dot{background:var(--acc);border-color:var(--acc)}
+.side-note{margin-top:16px;padding:10px 12px;background:var(--card);border:1px dashed var(--line2);border-radius:12px;font-size:11.5px;color:var(--tx3);line-height:1.8}
+/* ---------- main ---------- */
+main{padding:26px 34px 80px;max-width:980px;width:100%;margin:0 auto}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:22px;position:sticky;top:0;background:var(--bg);z-index:10;padding:12px 0}
+.topbar h2{font-size:19px;font-weight:800;flex:1}
+.topbar .crumb{font-size:12px;color:var(--tx3)}
+.badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px}
+.badge.theory{background:var(--blue-dim);color:var(--blue)}
+.badge.practice{background:var(--acc-dim);color:var(--acc)}
+.badge.adv{background:var(--amber-dim);color:var(--amber)}
+/* section card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 28px;margin-bottom:20px;scroll-margin-top:80px;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card-head{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}
+.card-head .ico{font-size:24px}
+.card-head h3{font-size:18px;font-weight:800;flex:1;line-height:1.6}
+.done-toggle{flex:none;display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:99px;padding:7px 13px;font-size:12px;color:var(--tx2);cursor:pointer;transition:.2s;font-family:inherit;font-weight:700}
+.done-toggle:hover{border-color:var(--line2);color:var(--tx)}
+.done-toggle.on{background:var(--acc-dim);border-color:var(--acc2);color:var(--acc)}
+.card.done .card-head h3{color:var(--tx3);text-decoration:line-through;text-decoration-color:rgba(154,172,199,.4)}
+.card p{margin:0 0 12px;color:var(--tx)}
+.card ul,.card ol{margin:0 0 14px 0;padding-inline-start:24px}
+.card li{margin-bottom:7px;color:var(--tx)}
+.card li::marker{color:var(--acc2)}
+.card strong{color:var(--tx);font-weight:800}
+.card em{color:var(--tx2)}
+.card code{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:1.5px 6px;font-family:var(--mono);font-size:.85em;color:#7dd3fc;direction:ltr;unicode-bidi:embed}
+.card h4{margin:20px 0 10px;font-size:15.5px;font-weight:800;color:var(--acc)}
+.card a{color:var(--blue);text-decoration:none;border-bottom:1px dashed rgba(96,165,250,.4)}
+.card a:hover{border-bottom-color:var(--blue)}
+/* code blocks */
+.codeblock{background:#0d1420;border:1px solid var(--line);border-radius:12px;margin:14px 0 18px;overflow:hidden;direction:ltr}
+.codeblock .cb-head{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border-bottom:1px solid var(--line);padding:6px 14px}
+.codeblock .lang{font-size:11px;font-weight:700;color:var(--tx3);font-family:var(--mono);letter-spacing:.5px}
+.codeblock .copy-btn{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--line2);color:var(--tx2);
+  border-radius:8px;padding:3px 11px;font-family:inherit;font-size:11px;cursor:pointer;transition:.2s}
+.codeblock .copy-btn:hover{background:var(--card2);color:var(--acc);border-color:var(--acc2)}
+.codeblock pre{margin:0;padding:14px 16px;overflow-x:auto}
+.codeblock code{font-family:var(--mono);font-size:12.8px;line-height:1.75;color:#c9d7f0;white-space:pre;background:none;border:none;padding:0}
+.codeblock .c-cm{color:#5d7290}
+.codeblock .c-kw{color:#c084fc}
+/* exercise */
+.exercise{background:var(--amber-dim);border:1px solid rgba(251,191,36,.28);border-radius:12px;padding:15px 18px;margin:16px 0;display:flex;gap:13px;align-items:flex-start}
+.exercise .ex-ico{font-size:20px;line-height:1.4;flex:none}
+.exercise .ex-body{flex:1}
+.exercise .ex-label{font-size:11.5px;font-weight:800;color:var(--amber);letter-spacing:.4px;margin-bottom:3px}
+.exercise p{margin:0;font-size:13.8px;color:var(--tx)}
+.exercise .ex-check{flex:none;display:flex;align-items:center;gap:6px;margin-top:2px}
+.exercise input[type=checkbox],.checkline input[type=checkbox]{accent-color:var(--acc2);width:17px;height:17px;cursor:pointer}
+.exercise .ex-check label{font-size:11px;color:var(--tx3);cursor:pointer}
+.exercise.done{opacity:.65}
+.exercise.done .ex-body p{text-decoration:line-through;text-decoration-color:rgba(251,191,36,.5)}
+/* callout */
+.callout{background:var(--blue-dim);border:1px solid rgba(96,165,250,.25);border-inline-start:4px solid var(--blue);
+  border-radius:10px;padding:13px 16px;margin:14px 0;font-size:13.5px;color:var(--tx)}
+.callout p{margin:0 0 8px}
+.callout p:last-child{margin-bottom:0}
+.callout .codeblock{margin:10px 0 0;background:#0d1420}
+/* checklist */
+.checklist{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin:12px 0 16px}
+.checkline{display:flex;align-items:flex-start;gap:10px;padding:8px 4px;border-bottom:1px dashed var(--line);font-size:13.5px;color:var(--tx2);cursor:pointer;transition:.15s}
+.checkline:last-child{border-bottom:none}
+.checkline:hover{color:var(--tx)}
+.checkline input{margin-top:4px}
+.checkline.done{color:var(--tx3)}
+.checkline.done span{text-decoration:line-through;text-decoration-color:rgba(154,172,199,.4)}
+/* tables */
+.table-wrap{overflow-x:auto;margin:14px 0 18px;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th{background:var(--bg2);color:var(--acc);font-weight:800;padding:10px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid var(--line);color:var(--tx2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg2)}
+td code{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:var(--mono);font-size:.85em;color:#7dd3fc;white-space:nowrap;direction:ltr;unicode-bidi:embed}
+/* card footer nav */
+.card-nav{display:flex;justify-content:space-between;gap:12px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.card-nav button{background:var(--card2);border:1px solid var(--line2);color:var(--tx);border-radius:11px;padding:9px 18px;
+  font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
+.card-nav button:hover:not(:disabled){background:var(--acc-dim);border-color:var(--acc2);color:var(--acc)}
+.card-nav button:disabled{opacity:.35;cursor:default}
+/* views */
+.view{display:none}
+.view.active{display:block;animation:fadeIn .3s ease}
+.view-head{margin-bottom:18px}
+.view-head h2{font-size:20px;font-weight:800;margin-bottom:6px}
+.view-head p{color:var(--tx2);font-size:13.5px}
+/* diagrams */
+.diagrams{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.diagram{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;transition:.2s}
+.diagram:hover{border-color:var(--line2);transform:translateY(-2px)}
+.diagram.wide{grid-column:1/-1}
+.diagram figcaption{font-size:13.5px;font-weight:800;color:var(--tx);margin:8px 2px 2px;display:flex;align-items:center;gap:8px}
+.diagram figcaption .dnum{font-size:11px;color:var(--acc);background:var(--acc-dim);border-radius:7px;padding:2px 9px;font-weight:800}
+.diagram svg{width:100%;height:auto;display:block;background:var(--bg2);border-radius:10px;border:1px solid var(--line)}
+.dg-t{font:600 12.5px "Vazirmatn",Tahoma,sans-serif;fill:#c6d2ea}
+.dg-tb{font:800 12.5px "Vazirmatn",Tahoma,sans-serif;fill:#7dd3fc}
+.dg-td{font:500 10.5px "Vazirmatn",Tahoma,sans-serif;fill:#7e8db0}
+.dg-box{fill:var(--card2);stroke:var(--line2);stroke-width:1.2;rx:10}
+.dg-box-hi{fill:rgba(52,211,153,.09);stroke:var(--acc2);stroke-width:1.3;rx:10}
+.dg-arr{stroke:#45547a;stroke-width:1.6;marker-end:url(#arw);fill:none}
+.dg-arr-acc{stroke:var(--acc2);stroke-width:1.6;marker-end:url(#arw);fill:none}
+.dg-mono{font:600 10.8px var(--mono);fill:#e2b55b;direction:ltr}
+/* glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g-term{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;transition:.2s}
+.g-term:hover{border-color:var(--acc2);transform:translateY(-1px)}
+.g-term h4{font-size:13.8px;font-weight:800;color:var(--acc);margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.g-term h4 .g-ico{font-size:15px}
+.g-term p{font-size:12.8px;color:var(--tx2);line-height:1.8;margin:0}
+.tool-search{width:100%;max-width:420px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--tx);
+  padding:10px 16px;font-family:inherit;font-size:13.5px;outline:none;margin-bottom:16px;transition:.2s}
+.tool-search:focus{border-color:var(--acc2);box-shadow:0 0 0 3px var(--acc-dim)}
+.hidden{display:none !important}
+.empty-note{color:var(--tx3);font-size:13px;padding:18px 4px}
+/* flashcards */
+.fc-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.fc-stat{flex:1;min-width:110px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.fc-stat b{display:block;font-size:18px;font-weight:800;color:var(--acc)}
+.fc-stat span{font-size:11.5px;color:var(--tx3)}
+.fc-stat.warn b{color:var(--amber)}
+.fc-ctrls{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.fc-ctl{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--tx3)}
+.fc-ctl select{background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--tx);padding:7px 12px;font-family:inherit;font-size:12.5px;outline:none;cursor:pointer}
+.fc-ctl select:focus{border-color:var(--acc2)}
+.fc-reset{margin-inline-start:auto;background:transparent;border:1px dashed var(--line2);color:var(--tx3);border-radius:10px;padding:8px 14px;font-family:inherit;font-size:11.5px;cursor:pointer;transition:.2s}
+.fc-reset:hover{color:var(--red);border-color:var(--red)}
+.fc-start{text-align:center;padding:34px 20px;background:var(--card);border:1px dashed var(--line2);border-radius:16px}
+.fc-start-info{color:var(--tx2);font-size:13.5px;margin-bottom:18px;line-height:2}
+.fc-start-info b{color:var(--acc)}
+.fc-big{background:var(--acc-dim);border:1px solid var(--acc2);color:var(--acc);border-radius:12px;padding:13px 30px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;transition:.2s}
+.fc-big:hover{background:rgba(52,211,153,.22);transform:translateY(-1px)}
+.fc-session{max-width:640px;margin:0 auto}
+.fc-progress{margin-bottom:14px}
+.fc-progress span{font-size:12.5px;color:var(--tx2)}
+.fc-bar{height:7px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-top:6px;border:1px solid var(--line)}
+.fc-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:99px;transition:width .3s}
+.fc-card{position:relative;background:var(--card2);border:1px solid var(--line2);border-radius:18px;min-height:230px;padding:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.2s;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.fc-card:hover{border-color:var(--acc2)}
+.fc-side{width:100%;text-align:center;font-size:19px;font-weight:700;line-height:2;color:var(--tx)}
+.fc-side .fc-sec{display:inline-block;margin-top:14px;font-size:11px;font-weight:700;color:var(--tx3);background:var(--bg2);border:1px solid var(--line);border-radius:99px;padding:3px 12px}
+.fc-side .fc-cmd{font-family:var(--mono);font-size:20px;color:#7dd3fc;direction:ltr;display:inline-block;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 16px}
+.fc-back{display:none}
+.fc-card.flipped .fc-back{display:block}
+.fc-card.flipped .fc-flip{display:none}
+.fc-flip{position:absolute;bottom:14px;background:var(--bg2);border:1px solid var(--line2);color:var(--tx2);border-radius:99px;padding:6px 16px;font-family:inherit;font-size:12px;cursor:pointer;transition:.2s}
+.fc-flip:hover{color:var(--acc);border-color:var(--acc2)}
+.fc-grades{display:flex;gap:8px;width:100%;margin-top:18px;flex-wrap:wrap;justify-content:center}
+.fc-grade{flex:1;min-width:110px;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:11px;padding:10px 6px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;border:1px solid var(--line2);background:var(--bg2);color:var(--tx);transition:.15s}
+.fc-grade small{font-size:10.5px;color:var(--tx3);font-weight:500}
+.fc-grade:hover{transform:translateY(-2px)}
+.fc-grade.g0:hover{border-color:var(--red);color:var(--red)}
+.fc-grade.g1:hover{border-color:var(--amber);color:var(--amber)}
+.fc-grade.g2:hover{border-color:var(--acc);color:var(--acc)}
+.fc-grade.g3:hover{border-color:var(--blue);color:var(--blue)}
+.fc-hint{margin-top:12px;text-align:center;font-size:11px;color:var(--tx3)}
+.fc-hint b{color:var(--tx2)}
+.fc-done{text-align:center;padding:40px 20px;background:var(--card);border:1px solid var(--line2);border-radius:16px}
+.fc-done-ico{font-size:42px;margin-bottom:10px}
+.fc-done h3{font-size:18px;font-weight:800;margin-bottom:12px}
+.fc-done-summary{color:var(--tx2);font-size:13.5px;line-height:2.2;margin-bottom:20px}
+.fc-done-summary b{color:var(--acc)}
+.fc-done .fc-big{margin-top:6px}
+/* terminal lab */
+.term-layout{display:grid;grid-template-columns:290px 1fr;gap:16px;align-items:start}
+.term-missions{display:flex;flex-direction:column;gap:10px;max-height:calc(100vh - 200px);overflow-y:auto;padding-inline-end:4px}
+.term-mission{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 14px;cursor:pointer;transition:.2s}
+.term-mission:hover{border-color:var(--line2)}
+.term-mission.sel{border-color:var(--acc2);background:var(--card2)}
+.term-mission.done{opacity:.8}
+.term-mission .tm-head{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;color:var(--tx)}
+.term-mission .tm-ico{font-size:15px}
+.term-mission .tm-prog{margin-inline-start:auto;font-size:10.5px;color:var(--acc);background:var(--acc-dim);border-radius:99px;padding:1px 8px;font-weight:700}
+.term-mission.done .tm-prog{background:var(--acc-dim);color:var(--acc)}
+.term-mission .tm-steps{margin-top:8px;display:none;flex-direction:column;gap:5px}
+.term-mission.sel .tm-steps{display:flex}
+.tm-step{display:flex;align-items:flex-start;gap:7px;font-size:11.5px;color:var(--tx2);line-height:1.7}
+.tm-step .dot{flex:none;width:15px;height:15px;border-radius:50%;border:2px solid var(--line2);margin-top:2px;transition:.2s}
+.tm-step.ok .dot{background:var(--acc);border-color:var(--acc)}
+.tm-step.ok{color:var(--tx3);text-decoration:line-through;text-decoration-color:rgba(154,172,199,.35)}
+.term-missions-head{font-size:12.5px;font-weight:800;color:var(--tx2);padding:2px 2px 6px}
+.term-missions-head b{color:var(--acc)}
+.tl-ok{color:#34d399;font-weight:600}
+.term-panel{background:#0a0f14;border:1px solid var(--line2);border-radius:14px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.term-head{display:flex;align-items:center;justify-content:space-between;background:#0d1420;border-bottom:1px solid var(--line);padding:8px 14px;font-size:11.5px;color:var(--tx3);font-family:var(--mono)}
+.term-reset{background:transparent;border:1px solid var(--line2);color:var(--tx3);border-radius:8px;padding:3px 10px;font-family:inherit;font-size:10.5px;cursor:pointer;transition:.2s}
+.term-reset:hover{color:var(--red);border-color:var(--red)}
+.term-out{min-height:420px;max-height:calc(100vh - 260px);overflow-y:auto;padding:16px 18px;font-family:var(--mono);font-size:12.8px;line-height:1.75;direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-word;background:transparent;outline:none}
+.term-out::-webkit-scrollbar-thumb{background:#1d2a3f}
+.tl-cmd{color:#34d399;font-weight:600;margin-top:8px}
+.tl-cmd .tl-p{color:#6ee7b7}
+.tl-out{color:#d1e7f5}
+.tl-err{color:#f87171}
+.tl-info{color:#64748b;font-style:italic}
+.tl-sep{color:#64748b;margin:6px 0 2px;border-top:1px dashed #1e293b}
+.term-inline{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:10px 14px;background:#0d1420}
+.term-prompt{font-family:var(--mono);font-size:12.8px;color:#6ee7b7;white-space:nowrap;direction:ltr}
+#term-in{flex:1;background:transparent;border:none;outline:none;color:#e6f7ff;font-family:var(--mono);font-size:12.8px;caret-color:#34d399;direction:ltr}
+#term-in::placeholder{color:#45546e}
+.term-hint{margin-top:10px;font-size:11px;color:var(--tx3);text-align:center}
+.term-hint b{color:var(--tx2)}
+@media(max-width:1000px){ .term-layout{grid-template-columns:1fr} }
+.done-banner{display:none;background:var(--acc-dim);border:1px solid var(--acc2);border-radius:14px;padding:18px 22px;margin-bottom:18px;
+  font-weight:800;color:var(--acc);font-size:15px;align-items:center;gap:12px;animation:fadeIn .5s ease}
+.done-banner.show{display:flex}
+.footer-note{margin-top:34px;text-align:center;color:var(--tx3);font-size:12px;line-height:2}
+.footer-note a{color:var(--tx2)}
+@media(max-width:1000px){
+  .layout{grid-template-columns:1fr}
+  aside{position:static;height:auto;border-inline-start:none;border-bottom:1px solid var(--line)}
+  main{padding:20px 16px 60px}
+  .diagrams{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand"><span class="logo">🐧</span><div><h1>نقشه راه لینوکس<small>دوره تعاملی از صفر تا مدیریت سیستم</small></h1></div></div>
+
+  <div class="progress-wrap">
+    <div class="progress-head"><span class="lbl">پیشرفت کلی دوره</span><span class="pct" id="pct">۰٪</span></div>
+    <div class="progress-bar"><i id="pbar"></i></div>
+  </div>
+
+  <div class="search-box">
+    <span class="ico">🔍</span>
+    <input id="q" type="text" placeholder="جستجوی بخش، دستور یا مفهوم…" autocomplete="off">
+    <div class="search-results" id="qres"></div>
+  </div>
+
+  <nav id="nav">
+    <button data-view="course" class="active">📚 دوره</button>
+    <button data-view="diagrams">📊 نمودارها</button>
+    <button data-view="cheatsheet">⚡ برگه تقلب</button>
+    <button data-view="glossary">📖 واژه‌نامه</button>
+    <button data-view="flashcards">🃏 فلش‌کارت</button>
+    <button data-view="terminal">💻 ترمینال</button>
+  </nav>
+
+  <div id="sidebar-groups"></div>
+
+  <div class="side-note">💡 پیشرفت شما به‌صورت خودکار در همین مرورگر ذخیره می‌شود (localStorage). هر بخش را که تمام کردید تیک بزنید. دستورات را <b>تایپ</b> کنید، نه کپی — اما اگر واقعاً لازم شد، دکمه کپی کنار هر کد آماده است 🙂</div>
+</aside>
+
+<main>
+  <div class="done-banner" id="doneBanner">🎉 آفرین! تمام بخش‌های دوره را تکمیل کردی. حالا وقت پروژه‌های عملی (بخش ۲۸) و چک‌لیست نهایی (بخش ۳۱) است. 🐧</div>
+
+  <!-- ============ COURSE ============ -->
+  <div class="view active" id="view-course">
+    <div class="topbar"><h2>📚 بخش‌های دوره</h2><span class="crumb" id="crumbCourse">۴۶ بخش</span></div>
+    <div id="course"></div>
+  </div>
+
+  <!-- ============ DIAGRAMS ============ -->
+  <div class="view" id="view-diagrams">
+    <div class="view-head"><h2>📊 نمودارهای بصری</h2><p>مفاهیم کلیدی دوره در یک نگاه — هر نمودار را بزرگ و ذخیره کنید تا هنگام کار با ترمینال جلوی چشمتان باشد.</p></div>
+    <div class="diagrams" id="diagrams"></div>
+  </div>
+
+  <!-- ============ CHEATSHEET ============ -->
+  <div class="view" id="view-cheatsheet">
+    <div class="view-head"><h2>⚡ برگه تقلب دستورات</h2><p>هر دستوری را جستجو کنید — از بخش ۳۲ دوره.</p></div>
+    <input class="tool-search" id="cs-q" type="text" placeholder="جستجوی دستور یا کار مورد نظر…">
+    <div class="table-wrap" style="max-width:760px"><table><thead><tr><th>کار مورد نظر</th><th>دستور لینوکس</th></tr></thead><tbody id="cs-body"></tbody></table></div>
+  </div>
+
+  <!-- ============ GLOSSARY ============ -->
+  <div class="view" id="view-glossary">
+    <div class="view-head"><h2>📖 واژه‌نامه</h2><p>اصطلاحات کلیدی لینوکس با توضیح فارسی — از بخش ۳۳ دوره.</p></div>
+    <input class="tool-search" id="gl-q" type="text" placeholder="جستجوی واژه…">
+    <div class="gloss-grid" id="gl-body"></div>
+  </div>
+
+  <!-- ============ FLASHCARDS (SRS) ============ -->
+  <div class="view" id="view-flashcards">
+    <div class="view-head"><h2>🃏 فلش‌کارت‌ها</h2><p>دستورات کلیدی دوره را با تکرار فاصله‌دار (spaced repetition) به حافظه بلندمدت بسپار. الگوریتم SM-2 مثل آنکی — کارت‌ها بر اساس عملکردت در روزهای آینده دوباره نشان داده می‌شوند.</p></div>
+    <div class="fc-stats" id="fc-stats"></div>
+    <div class="fc-ctrls">
+      <label class="fc-ctl"><span>حالت کارت</span>
+        <select id="fc-mode">
+          <option value="q2a">معنی ← دستور</option>
+          <option value="a2q">دستور ← معنی</option>
+        </select>
+      </label>
+      <label class="fc-ctl"><span>گروه</span>
+        <select id="fc-group"><option value="all">همه بخش‌ها</option></select>
+      </label>
+      <button class="fc-reset" id="fc-reset">↺ بازنشانی پیشرفت</button>
+    </div>
+    <div class="fc-start" id="fc-start">
+      <div class="fc-start-info" id="fc-start-info"></div>
+      <button class="fc-big" id="fc-begin">▶ شروع مرور امروز</button>
+    </div>
+    <div class="fc-session hidden" id="fc-session">
+      <div class="fc-progress"><span id="fc-progress-txt"></span><div class="fc-bar"><i id="fc-bar-i"></i></div></div>
+      <div class="fc-card" id="fc-card">
+        <div class="fc-side fc-front" id="fc-front"></div>
+        <div class="fc-side fc-back" id="fc-back"></div>
+        <button class="fc-flip" id="fc-flip">👁 نمایش پاسخ</button>
+        <div class="fc-grades" id="fc-grades">
+          <button class="fc-grade g0" data-g="0">دوباره <small>۱۰ دقیقه</small></button>
+          <button class="fc-grade g1" data-g="1">سخت <small>۱ روز</small></button>
+          <button class="fc-grade g2" data-g="2">خوب <small>۶ روز</small></button>
+          <button class="fc-grade g3" data-g="3">آسان <small>۱۵ روز</small></button>
+        </div>
+      </div>
+      <div class="fc-hint">کلیدها: <b>Space</b> نمایش پاسخ · <b>1-4</b> درجه‌بندی · <b>R</b> مرور دوباره</div>
+    </div>
+    <div class="fc-done hidden" id="fc-done">
+      <div class="fc-done-ico">🎉</div>
+      <h3>جلسه مرور تمام شد!</h3>
+      <div id="fc-done-summary"></div>
+      <button class="fc-big" id="fc-again">▶ جلسه جدید</button>
+    </div>
+  </div>
+
+  <!-- ============ TERMINAL (virtual lab) ============ -->
+  <div class="view" id="view-terminal">
+    <div class="view-head"><h2>💻 ترمینال آزمایشگاهی</h2><p>یک ترمینال لینوکس شبیه‌سازی‌شده درون مرورگر با سیستم فایل مجازی. تمرین‌های بخش‌های پایه را اینجا انجام بده — مأموریت‌های سمت راست به‌صورت خودکار بررسی می‌شوند و وقتی کامل شوند، تمرین همان بخش در دوره هم تیک می‌خورد.</p></div>
+    <div class="term-layout">
+      <div class="term-missions" id="term-missions"></div>
+      <div class="term-panel">
+        <div class="term-head"><span>💻 user@lab: ~</span><button class="term-reset" id="term-reset">↺ بازنشانی آزمایشگاه</button></div>
+        <div class="term-out" id="term-out" tabindex="0"></div>
+        <div class="term-inline">
+          <span class="term-prompt" id="term-prompt">user@lab:~$</span>
+          <input id="term-in" type="text" autocomplete="off" spellcheck="false" placeholder="دستور را تایپ کنید… (help برای راهنما)">
+        </div>
+        <div class="term-hint">کلیدها: <b>Tab</b> تکمیل خودکار · <b>↑↓</b> تاریخچه · <b>Ctrl+L</b> پاک‌کردن صفحه</div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script id="app-data" type="application/json">__APP_DATA__</script>
+<script>
+(function(){
+"use strict";
+const DATA = JSON.parse(document.getElementById('app-data').textContent);
+const STORE_KEY = 'linuxroadmap_progress_v1';
+const store = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+const set = (k,v)=>{ store[k]=v; localStorage.setItem(STORE_KEY, JSON.stringify(store)); renderProgress(); };
+const has = k => !!store[k];
+
+const FA = {0:'۰',1:'۱',2:'۲',3:'۳',4:'۴',5:'۵',6:'۶',7:'۷',8:'۸',9:'۹'};
+const toFa = n => String(n).replace(/\d/g, d=>FA[d]);
+const escH = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ---------- sidebar ---------- */
+const groups = {};
+DATA.sections.forEach(s=>{ (groups[s.group] = groups[s.group] || []).push(s); });
+
+function groupBadge(g){
+  if(g.includes('تئوری')) return 'theory';
+  if(g.includes('پیشرفته')) return 'adv';
+  return 'practice';
+}
+
+function renderSidebar(){
+  const el = document.getElementById('sidebar-groups');
+  el.innerHTML = '';
+  DATA.groups.forEach(g=>{
+    if(!groups[g]) return;
+    const secs = groups[g];
+    const wrap = document.createElement('div');
+    wrap.className = 'grp';
+    wrap.innerHTML = '<div class="grp-h"><span>'+g+'</span><span class="gprog" data-gprog="'+g+'"></span></div>';
+    const list = document.createElement('div');
+    list.className = 'sec-list';
+    secs.forEach(s=>{
+      const a = document.createElement('a');
+      a.className = 'sec-item'+(has(s.key)?' done':'');
+      a.href = '#sec-'+s.i;
+      a.setAttribute('data-sec', s.i);
+      a.innerHTML = '<span class="num">'+s.numBadge+'</span><span class="t">'+s.title+'</span><span class="dot"></span>';
+      a.addEventListener('click', e=>{ e.preventDefault(); showSection(s.i); });
+      list.appendChild(a);
+    });
+    wrap.appendChild(list);
+    el.appendChild(wrap);
+  });
+}
+
+/* ---------- progress ---------- */
+function renderProgress(){
+  const total = DATA.sections.length;
+  const done = DATA.sections.filter(s=>has(s.key)).length;
+  const pct = total? Math.round(done/total*100) : 0;
+  document.getElementById('pct').textContent = toFa(pct)+'٪';
+  document.getElementById('pbar').style.width = pct+'%';
+  document.querySelectorAll('[data-gprog]').forEach(n=>{
+    const secs = groups[n.getAttribute('data-gprog')] || [];
+    const d = secs.filter(s=>has(s.key)).length;
+    n.textContent = (secs.length? toFa(d)+' / '+toFa(secs.length) : '');
+  });
+  document.querySelectorAll('.sec-item').forEach(n=>{
+    n.classList.toggle('done', has(DATA.sections[+n.getAttribute('data-sec')].key));
+  });
+  document.getElementById('doneBanner').classList.toggle('show', pct===100 && total>0);
+}
+
+/* ---------- course render ---------- */
+function renderCourse(){
+  const el = document.getElementById('course');
+  el.innerHTML = '<div class="card" id="intro-card"><div class="card-head"><span class="ico">🐧</span><h3>درباره این دوره</h3></div><div class="body">'+DATA.introHtml+'</div></div>';
+  DATA.sections.forEach((s,i)=>{
+    const card = document.createElement('article');
+    card.className = 'card'+(has(s.key)?' done':'');
+    card.id = 'sec-'+i;
+    const prev = i>0? DATA.sections[i-1] : null;
+    const next = i<DATA.sections.length-1? DATA.sections[i+1] : null;
+    card.innerHTML =
+      '<div class="card-head"><span class="ico">'+s.emoji+'</span><h3>'+s.title+'</h3>'+
+      '<span class="badge '+groupBadge(s.group)+'">'+s.group+'</span>'+
+      '<button class="done-toggle'+(has(s.key)?' on':'')+'" data-k="'+s.key+'"><span>✓</span>'+(has(s.key)?'تمام شد':'انجام شد؟')+'</button></div>'+
+      '<div class="body">'+s.html+'</div>'+
+      '<div class="card-nav"><button class="nav-prev" data-i="'+(i-1)+'" '+(prev?'':'disabled')+'>→ بخش قبلی</button>'+
+      '<button class="nav-next" data-i="'+(i+1)+'" '+(next?'':'disabled')+'>بخش بعدی ←</button></div>';
+    el.appendChild(card);
+  });
+  el.querySelectorAll('.done-toggle').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const k = btn.getAttribute('data-k');
+      const on = !has(k);
+      set(k, on);
+      btn.classList.toggle('on', on);
+      btn.innerHTML = '<span>✓</span>'+(on?'تمام شد':'انجام شد؟');
+      const card = btn.closest('.card');
+      card.classList.toggle('done', on);
+    });
+  });
+  el.querySelectorAll('.nav-prev,.nav-next').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ const t=+btn.getAttribute('data-i'); if(t>=0 && t<DATA.sections.length) showSection(t); });
+  });
+  bindMicro();
+}
+
+/* per-card checkboxes (exercises & checklists) */
+function bindMicro(){
+  document.querySelectorAll('#course input[data-k]').forEach(cb=>{
+    if(cb.getAttribute('data-bound')) return;
+    cb.setAttribute('data-bound','1');
+    cb.checked = has(cb.getAttribute('data-k'));
+    cb.addEventListener('change', ()=>{
+      const k = cb.getAttribute('data-k');
+      set(k, cb.checked);
+      cb.closest('.exercise') && cb.closest('.exercise').classList.toggle('done', cb.checked);
+      cb.closest('.checkline') && cb.closest('.checkline').classList.toggle('done', cb.checked);
+    });
+    if(cb.closest('.exercise') && cb.checked) cb.closest('.exercise').classList.add('done');
+    if(cb.closest('.checkline') && cb.checked) cb.closest('.checkline').classList.add('done');
+  });
+}
+
+/* copy buttons */
+document.addEventListener('click', e=>{
+  const b = e.target.closest('.copy-btn');
+  if(!b) return;
+  const code = b.getAttribute('data-code') || '';
+  const done = ()=>{
+    const old = b.textContent; b.textContent = '✓ کپی شد'; b.style.color='var(--acc)';
+    setTimeout(()=>{ b.textContent = old; b.style.color=''; },1400);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(done).catch(()=>fallbackCopy(code,done));
+  } else fallbackCopy(code,done);
+});
+function fallbackCopy(text, cb){
+  const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{document.execCommand('copy');}catch(_){}
+  document.body.removeChild(ta); cb();
+}
+
+/* ---------- navigation ---------- */
+function showSection(i){
+  const card = document.getElementById('sec-'+i);
+  if(!card) return;
+  card.scrollIntoView({behavior:'smooth', block:'start'});
+  document.querySelectorAll('.sec-item').forEach(n=>n.classList.toggle('active', +n.getAttribute('data-sec')===i));
+  setView('course');
+  location.hash = 'sec-'+i;
+}
+function setView(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-view')===v));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('#nav button').forEach(b=>{
+  b.addEventListener('click', ()=>setView(b.getAttribute('data-view')));
+});
+
+/* ---------- search ---------- */
+const qInput = document.getElementById('q');
+const qRes = document.getElementById('qres');
+function doSearch(){
+  const q = qInput.value.trim();
+  if(q.length < 2){ qRes.classList.remove('open'); return; }
+  const ql = q.toLowerCase();
+  const res = [];
+  DATA.sections.forEach(s=>{
+    let score = 0;
+    if(s.title.toLowerCase().includes(ql)) score += 3;
+    if(s.plain.includes(ql)) score += 2;
+    const cmdHit = s.commands.filter(c=>c.includes(ql)).slice(0,2);
+    if(cmdHit.length) score += 2;
+    if(score>0) res.push({s, score, cmdHit});
+  });
+  res.sort((a,b)=>b.score-a.score);
+  qRes.innerHTML = '';
+  if(!res.length){ qRes.innerHTML = '<div class="sr-note">چیزی پیدا نشد 😕</div>'; qRes.classList.add('open'); return; }
+  res.slice(0,8).forEach(r=>{
+    const a = document.createElement('a');
+    a.href='#sec-'+r.s.i;
+    a.innerHTML = '<b>'+escH(r.s.title)+'</b>' + (r.cmdHit.length? ' — <code style="font-family:var(--mono);font-size:11px;color:#7dd3fc">'+escH(r.cmdHit[0])+'</code>':'');
+    a.addEventListener('click', e=>{ e.preventDefault(); qRes.classList.remove('open'); showSection(r.s.i); });
+    qRes.appendChild(a);
+  });
+  qRes.classList.add('open');
+}
+qInput.addEventListener('input', doSearch);
+qInput.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){ const a=qRes.querySelector('a'); if(a){ a.click(); } }
+  if(e.key==='Escape'){ qRes.classList.remove('open'); qInput.blur(); }
+});
+document.addEventListener('click', e=>{ if(!e.target.closest('.search-box')) qRes.classList.remove('open'); });
+document.addEventListener('keydown', e=>{
+  if(e.key==='/' && document.activeElement.tagName!=='INPUT'){ e.preventDefault(); qInput.focus(); }
+});
+
+/* ---------- cheatsheet ---------- */
+function renderCheatsheet(){
+  const body = document.getElementById('cs-body');
+  body.innerHTML = DATA.cheatsheet.map(r=>'<tr><td>'+r.task+'</td><td><code>'+r.cmd+'</code></td></tr>').join('');
+  document.getElementById('cs-q').addEventListener('input', e=>{
+    const q = e.target.value.trim().toLowerCase();
+    document.querySelectorAll('#cs-body tr').forEach(tr=>{
+      tr.classList.toggle('hidden', q && !tr.textContent.toLowerCase().includes(q));
+    });
+  });
+}
+
+/* ---------- glossary ---------- */
+function renderGlossary(){
+  const body = document.getElementById('gl-body');
+  body.innerHTML = DATA.glossary.map((g,i)=>'<div class="g-term"><h4><span class="g-ico">📌</span>'+g.term+'</h4><p>'+g.def+'</p></div>').join('');
+  document.getElementById('gl-q').addEventListener('input', e=>{
+    const q = e.target.value.trim().toLowerCase();
+    document.querySelectorAll('#gl-body .g-term').forEach(el=>{
+      el.classList.toggle('hidden', q && !el.textContent.toLowerCase().includes(q));
+    });
+  });
+}
+
+/* ---------- diagrams ---------- */
+const DIAGRAMS = [
+{wide:false,title:'لایه‌های سیستم — جایگاه شما و هسته',svg:'__D1__'},
+{wide:true,title:'درخت سیستم فایل — شاخه‌های اصلی',svg:'__D2__'},
+{wide:true,title:'بوت شدن سیستم — از دکمه پاور تا ورود',svg:'__D3__'},
+{wide:false,title:'چرخه حیات فرآیند — fork، exec و exit',svg:'__D4__'},
+{wide:true,title:'لوله (pipe) — جریان متن در فیلترها',svg:'__D5__'},
+{wide:false,title:'بررسی مجوزهای دسترسی — rwx',svg:'__D6__'},
+{wide:false,title:'لینک سخت در برابر لینک نمادین — درون inode',svg:'__D7__'},
+];
+function renderDiagrams(){
+  const el = document.getElementById('diagrams');
+  el.innerHTML = DIAGRAMS.map((d,i)=>'<figure class="diagram'+(d.wide?' wide':'')+'"><figcaption><span class="dnum">نمودار '+(i+1)+'</span>'+d.title+'</figcaption>'+d.svg+'</figure>').join('');
+}
+
+/* ---------- flashcards: spaced repetition (SM-2) ---------- */
+const SRS_KEY = 'linuxroadmap_srs_v1';
+const DAY = 86400000;
+const NEW_PER_DAY = 12;
+let srs = null;
+function loadSrs(){
+  try{ srs = JSON.parse(localStorage.getItem(SRS_KEY)); }catch(_){ srs = null; }
+  if(!srs || !srs.cards){ srs = { cards: {}, meta: { day: todayKey(), newCount: 0 } }; }
+  // reset daily new-card budget if the date changed
+  if(srs.meta.day !== todayKey()){ srs.meta.day = todayKey(); srs.meta.newCount = 0; }
+}
+function saveSrs(){ try{ localStorage.setItem(SRS_KEY, JSON.stringify(srs)); }catch(_){ /* storage full or blocked — keep session state in memory */ } }
+function todayKey(){ const d = new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+function cardState(id){
+  if(!srs.cards[id]) srs.cards[id] = { ease: 2.5, interval: 0, reps: 0, due: 0, last: 0, lapses: 0, seen: false };
+  return srs.cards[id];
+}
+const MAX_INTERVAL = 3650; // ~10 years
+/* 0=again 1=hard 2=good 3=easy — standard SM-2 with easing */
+function gradeCard(c, g, now){
+  now = now || Date.now();
+  c.seen = true;
+  if(g === 0){
+    c.reps = 0; c.interval = 0; c.lapses = (c.lapses||0)+1;
+    c.ease = Math.max(1.3, c.ease - 0.2);
+  } else if(g === 1){
+    c.reps = Math.max(1, c.reps+1);
+    c.interval = c.reps <= 1 ? 1 : Math.max(1, Math.round(c.interval * 1.2));
+    c.ease = Math.max(1.3, c.ease - 0.15);
+  } else if(g === 2){
+    c.reps = c.reps+1;
+    if(c.reps === 1) c.interval = 1;
+    else if(c.reps === 2) c.interval = 6;
+    else c.interval = Math.round(c.interval * c.ease);
+  } else {
+    c.reps = c.reps+1;
+    if(c.reps === 1) c.interval = 4;
+    else if(c.reps === 2) c.interval = 12;
+    else c.interval = Math.round(c.interval * c.ease * 1.3);
+    c.ease = Math.min(3, c.ease + 0.15);
+  }
+  c.interval = Math.min(MAX_INTERVAL, Math.max(0, c.interval));
+  c.last = now;
+  c.due = now + c.interval * DAY;
+  return c.interval;
+}
+/* next interval a grade would produce, for button labels (without mutating state) */
+function previewInterval(c, g){
+  const ease = c.ease, reps = c.reps, iv = c.interval;
+  if(g === 0) return 0;
+  if(g === 1) return c.reps <= 1 ? 1 : Math.max(1, Math.round(c.interval * 1.2));
+  if(g === 2) return c.reps === 0 ? 1 : (c.reps === 1 ? 6 : Math.round(c.interval * c.ease));
+  return c.reps === 0 ? 4 : (c.reps === 1 ? 12 : Math.round(c.interval * c.ease * 1.3));
+}
+function fcLabel(days){
+  if(days <= 0) return 'همین حالا';
+  if(days === 1) return '۱ روز';
+  if(days < 30) return toFa(days)+' روز';
+  if(days < 365) return toFa(Math.round(days/30))+' ماه';
+  return toFa(Math.round(days/365))+' سال';
+}
+
+let fcGroup = 'all';
+let fcMode = 'q2a';
+let fcQueue = [];
+let fcPos = 0;
+let fcAnswered = 0;
+let fcFlipped = false;
+let fcSessionStats = { lapsed:0, hard:0, good:0, easy:0 };
+
+function fcFiltered(){
+  return DATA.cards.filter(c => fcGroup==='all' || DATA.sections[c.secIdx].group === fcGroup);
+}
+function fcIsNew(id){ const st = srs.cards[id]; return !st || !st.seen; }
+function fcIsDue(id, now){
+  const st = srs.cards[id];
+  if(!st || !st.seen) return false;
+  return st.due <= now;
+}
+function fcDueCount(filtered){
+  const now = Date.now();
+  return filtered.filter(c => fcIsDue(c.id, now)).length;
+}
+function fcNewLeft(filtered){
+  const used = srs.meta.newCount;
+  const avail = Math.max(0, NEW_PER_DAY - used);
+  const unseen = filtered.filter(c => fcIsNew(c.id)).length;
+  return Math.min(avail, unseen);
+}
+function fcShuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function fcBuildQueue(){
+  const now = Date.now();
+  const filtered = fcFiltered();
+  const due = fcShuffle(filtered.filter(c => fcIsDue(c.id, now)));
+  const newLeft = fcNewLeft(filtered);
+  const fresh = fcShuffle(filtered.filter(c => fcIsNew(c.id))).slice(0, newLeft);
+  return { queue: due.concat(fresh), dueCount: due.length, newCount: fresh.length };
+}
+
+function fcRenderStats(){
+  const filtered = fcFiltered();
+  const now = Date.now();
+  const due = fcDueCount(filtered);
+  const nl = fcNewLeft(filtered);
+  const learned = filtered.filter(c => {
+    const st = srs.cards[c.id]; return st && st.reps > 0 && st.interval >= 21;
+  }).length;
+  const el = document.getElementById('fc-stats');
+  el.innerHTML =
+    '<div class="fc-stat warn"><b>'+toFa(due)+'</b><span>برای مرور امروز</span></div>'+
+    '<div class="fc-stat"><b>'+toFa(nl)+'</b><span>کارت جدید امروز</span></div>'+
+    '<div class="fc-stat"><b>'+toFa(learned)+'</b><span>در حافظه بلندمدت</span></div>'+
+    '<div class="fc-stat"><b>'+toFa(filtered.length)+'</b><span>کل کارت‌های این گروه</span></div>';
+  return { due, nl };
+}
+function fcRenderStart(){
+  const b = fcBuildQueue();
+  const el = document.getElementById('fc-start-info');
+  el.innerHTML = b.queue.length
+    ? 'امروز <b>'+toFa(b.dueCount)+' کارت برای مرور</b> و <b>'+toFa(b.newCount)+' کارت جدید</b> در صف است.'
+    : 'برای امروز همه‌چیز مرور شده است — عالی! 🎉 کارت جدیدی هم در سهمیه امروز باقی نمانده.';
+  const btn = document.getElementById('fc-begin');
+  btn.textContent = b.queue.length ? '▶ شروع مرور ('+toFa(b.queue.length)+')' : '▶ جلسه جدید';
+  return b;
+}
+function fcRenderCard(){
+  const card = fcQueue[fcPos];
+  if(!card){ fcFinish(); return; }
+  const sec = DATA.sections[card.secIdx];
+  const stObj = cardState(card.id);
+  const st = stObj.interval;
+  const front = document.getElementById('fc-front');
+  const back = document.getElementById('fc-back');
+  if(fcMode === 'q2a'){
+    front.innerHTML = '<div>'+escH(card.meaning)+'</div><div class="fc-sec">'+sec.emoji+' '+escH(sec.title)+'</div>';
+    back.innerHTML = '<div class="fc-cmd">'+escH(card.cmd)+'</div><div class="fc-sec">'+sec.emoji+' '+escH(sec.title)+'</div>';
+  } else {
+    front.innerHTML = '<div class="fc-cmd">'+escH(card.cmd)+'</div><div class="fc-sec">'+sec.emoji+' '+escH(sec.title)+'</div>';
+    back.innerHTML = '<div>'+escH(card.meaning)+'</div><div class="fc-sec">'+sec.emoji+' '+escH(sec.title)+'</div>';
+  }
+  const cardEl = document.getElementById('fc-card');
+  cardEl.classList.remove('flipped');
+  fcFlipped = false;
+  document.getElementById('fc-progress-txt').textContent = 'کارت '+toFa(fcPos+1)+' از '+toFa(fcQueue.length)+' — فاصله فعلی: '+(st>0? fcLabel(st) : 'جدید');
+  document.getElementById('fc-bar-i').style.width = (fcPos/fcQueue.length*100)+'%';
+  // dynamic grade labels based on the actual interval each grade produces
+  document.querySelectorAll('.fc-grade').forEach(b=>{
+    const g = +b.getAttribute('data-g');
+    b.querySelector('small').textContent = fcLabel(previewInterval(stObj, g));
+  });
+}
+function fcFlip(){
+  if(fcFlipped) return;
+  fcFlipped = true;
+  document.getElementById('fc-card').classList.add('flipped');
+}
+function fcGrade(g){
+  const card = fcQueue[fcPos];
+  if(!card || !fcFlipped) return;
+  const st = cardState(card.id);
+  const wasNew = fcIsNew(card.id);
+  gradeCard(st, g);
+  if(g===0) fcSessionStats.lapsed++; else if(g===1) fcSessionStats.hard++; else if(g===2) fcSessionStats.good++; else fcSessionStats.easy++;
+  // genuinely new cards (first answer, correct or not) consume today's budget once
+  if(wasNew) srs.meta.newCount++;
+  saveSrs();
+  fcAnswered++;
+  // Anki-style: lapsed cards re-enter the current session queue
+  if(g === 0) fcQueue.push(card);
+  fcPos++;
+  if(fcPos >= fcQueue.length) fcFinish(); else fcRenderCard();
+}
+function fcFinish(){
+  const sum = fcSessionStats;
+  document.getElementById('fc-session').classList.add('hidden');
+  const el = document.getElementById('fc-done');
+  el.classList.remove('hidden');
+  document.getElementById('fc-done-summary').innerHTML =
+    'در این جلسه <b>'+toFa(fcAnswered)+' کارت</b> مرور شد.<br>'+
+    '🔴 دوباره: <b>'+toFa(sum.lapsed)+'</b> · 🟡 سخت: <b>'+toFa(sum.hard)+'</b> · 🟢 خوب: <b>'+toFa(sum.good)+'</b> · 🔵 آسان: <b>'+toFa(sum.easy)+'</b>';
+  renderProgress();
+}
+function fcStartSession(){
+  const b = fcBuildQueue();
+  if(!b.queue.length){ return; }
+  fcQueue = b.queue; fcPos = 0; fcAnswered = 0;
+  fcSessionStats = { lapsed:0, hard:0, good:0, easy:0 };
+  document.getElementById('fc-start').classList.add('hidden');
+  document.getElementById('fc-done').classList.add('hidden');
+  document.getElementById('fc-session').classList.remove('hidden');
+  fcRenderCard();
+}
+function fcReset(){
+  if(!confirm('همه پیشرفت فلش‌کارت‌ها پاک شود؟ این عمل برگشت‌ناپذیر است.')) return;
+  srs = { cards: {}, meta: { day: todayKey(), newCount: 0 } };
+  saveSrs();
+  renderProgress();
+  fcRenderStats();
+  fcRenderStart();
+  document.getElementById('fc-session').classList.add('hidden');
+  document.getElementById('fc-done').classList.add('hidden');
+  document.getElementById('fc-start').classList.remove('hidden');
+}
+
+function initFlashcards(){
+  loadSrs();
+  const sel = document.getElementById('fc-group');
+  DATA.groups.forEach(g => { const o=document.createElement('option'); o.value=g; o.textContent=g; sel.appendChild(o); });
+  const modeSel = document.getElementById('fc-mode');
+  modeSel.value = (localStorage.getItem('linuxroadmap_fcmode') || 'q2a');
+  fcMode = modeSel.value;
+  sel.addEventListener('change', ()=>{ fcGroup = sel.value; renderProgress(); fcRenderStats(); fcRenderStart(); });
+  modeSel.addEventListener('change', ()=>{ fcMode = modeSel.value; localStorage.setItem('linuxroadmap_fcmode', fcMode); if(!document.getElementById('fc-start').classList.contains('hidden')) fcRenderStart(); });
+  document.getElementById('fc-begin').addEventListener('click', fcStartSession);
+  document.getElementById('fc-again').addEventListener('click', ()=>{
+    document.getElementById('fc-done').classList.add('hidden');
+    document.getElementById('fc-start').classList.remove('hidden');
+    fcRenderStart();
+    fcRenderStats();
+  });
+  document.getElementById('fc-reset').addEventListener('click', fcReset);
+  document.getElementById('fc-flip').addEventListener('click', e=>{ e.stopPropagation(); fcFlip(); });
+  document.getElementById('fc-card').addEventListener('click', ()=>{ fcFlip(); });
+  document.querySelectorAll('.fc-grade').forEach(b=>{
+    b.addEventListener('click', e=>{ e.stopPropagation(); fcGrade(+b.getAttribute('data-g')); });
+  });
+  document.addEventListener('keydown', e=>{
+    if(e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+    if(!document.getElementById('view-flashcards').classList.contains('active')) return;
+    if(document.getElementById('fc-session').classList.contains('hidden')) return;
+    if(e.key===' '){ e.preventDefault(); fcFlip(); }
+    else if(e.key==='1') fcGrade(0);
+    else if(e.key==='2') fcGrade(1);
+    else if(e.key==='3') fcGrade(2);
+    else if(e.key==='4') fcGrade(3);
+  });
+  renderProgress();
+  fcRenderStats();
+  fcRenderStart();
+}
+
+/* ================= TERMINAL LAB ================= */
+const TERM_KEY = 'linuxroadmap_term_v1';
+let termData = null;
+function termLoad(){
+  try{ termData = JSON.parse(localStorage.getItem(TERM_KEY)); }catch(_){ termData = null; }
+  if(!termData) termData = { missions: {}, history: [] };
+  if(!termData.missions) termData.missions = {};
+  if(!termData.history) termData.history = [];
+  vHist = termData.history.slice(); vHistIdx = vHist.length;
+}
+function termSave(){ try{ termData.history = vHist.slice(-200); localStorage.setItem(TERM_KEY, JSON.stringify(termData)); }catch(_){} }
+
+/* ---------- virtual filesystem ---------- */
+const VFS = { root: { name:'/', type:'dir', mode:'755', children:{} } };
+let vCwd = ['home','user'];
+const vHome = ['home','user'];
+const vHost = 'lab';
+const vUser = 'user';
+const vKernel = '6.8.0-45-generic';
+let vHist = [];
+let vHistIdx = -1;
+let vAliases = {};
+let vLastCwd = null;
+let vCmdCount = 0;
+
+function vNode(pathArr){ let n = VFS.root; for(const seg of pathArr){ if(!n || n.type!=='dir') return null; n = n.children[seg]; } return n || null; }
+function vMkNode(pathArr, type, mode, content){
+  let n = VFS.root;
+  for(let i=0;i<pathArr.length;i++){
+    const seg = pathArr[i];
+    if(i === pathArr.length-1){
+      if(n.children[seg]) return false;
+      n.children[seg] = { name:seg, type, mode: mode||(type==='dir'?'755':'644'), content: content||'', children: type==='dir'?{}:null };
+      return true;
+    }
+    if(!n.children[seg]){ n.children[seg] = { name:seg, type:'dir', mode:'755', children:{} }; }
+    n = n.children[seg];
+    if(n.type !== 'dir') return false;
+  }
+  return false;
+}
+function vResolve(path){
+  if(typeof path !== 'string') return [];
+  if(path === '~') return vHome.slice();
+  if(path.startsWith('~/')) return vHome.concat(path.slice(2).split('/').filter(Boolean));
+  const base = path.startsWith('/') ? [] : vCwd.slice();
+  for(const seg of path.split('/')){
+    if(!seg || seg === '.') continue;
+    if(seg === '..'){ base.pop(); }
+    else base.push(seg);
+  }
+  return base;
+}
+function vPathStr(arr){ return '/'+arr.join('/'); }
+function vIsDir(arr){ const n = vNode(arr); return !!n && n.type === 'dir'; }
+function vExists(arr){ return !!vNode(arr); }
+function vAbs(path){ return vPathStr(vResolve(path)); }
+function vListDir(arr){
+  const n = vNode(arr);
+  if(!n || n.type !== 'dir') return null;
+  return Object.keys(n.children).sort((a,b)=>{ const da = n.children[a].type==='dir'?0:1, db = n.children[b].type==='dir'?0:1; return da!==db? da-db : a.localeCompare(b); });
+}
+function vDirFromName(arr){ return arr.slice(0,-1); }
+function vBaseName(arr){ return arr[arr.length-1]; }
+function vReadFile(arr){
+  const n = vNode(arr);
+  if(!n) return null;
+  if(n.type !== 'file') return null;
+  return n.content;
+}
+function vWriteFile(arr, content){
+  const n = vNode(arr);
+  if(!n || n.type !== 'file') return false;
+  n.content = content;
+  return true;
+}
+function vAppendFile(arr, content){
+  const n = vNode(arr);
+  if(!n || n.type !== 'file') return false;
+  n.content = (n.content||'') + content;
+  return true;
+}
+function vRemove(arr){
+  const parent = vNode(arr.slice(0,-1));
+  if(!parent || parent.type!=='dir') return false;
+  const name = arr[arr.length-1];
+  if(!(name in parent.children)) return false;
+  delete parent.children[name];
+  return true;
+}
+function vCopy(src, dst){
+  const n = vNode(src);
+  if(!n) return false;
+  const c = JSON.parse(JSON.stringify(n));
+  c.name = dst[dst.length-1];
+  const parent = vNode(dst.slice(0,-1));
+  if(!parent || parent.type!=='dir') return false;
+  parent.children[c.name] = c;
+  return true;
+}
+function vWalk(arr, cb, depth){
+  const n = vNode(arr);
+  if(!n) return;
+  cb(arr, n);
+  if(n.type === 'dir' && depth > 0){
+    for(const k of Object.keys(n.children).sort()){
+      vWalk(arr.concat(k), cb, depth-1);
+    }
+  }
+}
+
+/* seed the virtual OS */
+function vSeed(){
+  VFS.root.children = {};
+  vCwd = vHome.slice(); vLastCwd = null; vHist = []; vHistIdx = -1; vCmdCount = 0; vAliases = {};
+  const dirs = ['/bin','/boot','/dev','/etc/ssh','/etc/nginx','/home/user/documents','/home/user/backups','/mnt','/opt','/proc','/root','/sys','/tmp','/usr/bin','/usr/lib','/var/log','/var/cache','/var/www'];
+  dirs.forEach(d=>vMkNode(d.split('/').filter(Boolean),'dir','755'));
+  vMkNode(['etc'],'dir','755'); vMkNode(['home'],'dir','755'); vMkNode(['home','user'],'dir','755'); vMkNode(['usr'],'dir','755'); vMkNode(['var'],'dir','755');
+  vMkNode(['usr','local'],'dir','755');
+  const F = (p, c, m)=>vMkNode(p.split('/').filter(Boolean),'file', m||'644', c);
+  F('/etc/os-release', 'PRETTY_NAME="Ubuntu 24.04 LTS"\nNAME="Ubuntu"\nVERSION_ID="24.04"\nVERSION="24.04 LTS (Noble Numbat)"\nID=ubuntu\nID_LIKE=debian\n', '644');
+  F('/etc/hostname', 'lab\n');
+  F('/etc/hosts', '127.0.0.1\tlocalhost\n127.0.1.1\tlab\n\n# The following lines are desirable for IPv6 capable hosts\n::1     ip6-localhost ip6-loopback\n', '644');
+  F('/etc/passwd', 'root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nuser:x:1000:1000:user:/home/user:/bin/bash\nsshd:x:103:65534::/run/sshd:/usr/sbin/nologin\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\n', '644');
+  F('/etc/group', 'root:x:0:\ndaemon:x:1:\nuser:x:1000:\nsudo:x:27:user\nssh:x:100:user\ndocker:x:999:user\n', '644');
+  F('/etc/shadow', 'root:!:19000:0:99999:7:::\nuser:$6$simulated$hash:19000:0:99999:7:::\n', '640');
+  F('/etc/ssh/sshd_config', '# This is the sshd server system-wide configuration file\n# See sshd_config(5) for more information\n\nPort 22\n#AddressFamily any\nListenAddress 0.0.0.0\nPermitRootLogin prohibit-password\nPubkeyAuthentication yes\nPasswordAuthentication yes\nMaxAuthTries 6\nAllowUsers user\n', '644');
+  F('/etc/nginx/nginx.conf', 'user www-data;\nworker_processes auto;\nevents { worker_connections 768; }\nhttp {\n    sendfile on;\n    server {\n        listen 80 default_server;\n        server_name _;\n        root /var/www/html;\n        location / { try_files $uri $uri/ =404; }\n    }\n}\n', '644');
+  F('/home/user/.bashrc', '# ~/.bashrc: executed by bash(1) for non-login shells.\nalias ll=\'ls -lah\'\nexport EDITOR=nano\nPS1=\'\\u@\\h:\\w\\$ \'\n', '644');
+  F('/home/user/notes.txt', 'یادداشت‌های من درباره لینوکس\n\nهر دستور را خودم تایپ می‌کنم نه کپی!\n', '644');
+  F('/home/user/file1.txt', 'فایل اول\n', '644');
+  F('/home/user/file2.txt', 'فایل دوم\n', '644');
+  F('/home/user/report.log', 'log line 1\nlog line 2\nlog line 3\n', '644');
+  F('/var/log/syslog', 'Aug  5 08:01:22 lab systemd[1]: Started Daily apt download activities.\nAug  5 08:02:11 lab sshd[521]: Server listening on 0.0.0.0 port 22.\nAug  5 09:14:35 lab kernel: [    1.234567] EXT4-fs (sda1): mounted filesystem\nAug  5 09:14:35 lab sshd[642]: Failed password for invalid user admin from 192.168.1.77 port 45678 ssh2\nAug  5 09:20:03 lab nginx[700]: [error] 5#5: *1 connect() failed (111: Connection refused)\nAug  5 10:45:12 lab cron[733]: (root) CMD (run-parts /etc/cron.daily)\nAug  5 11:02:58 lab sshd[811]: Accepted publickey for user from 10.0.0.55 port 52310 ssh2\nAug  5 12:30:00 lab systemd[1]: Starting Cleanup of Temporary Directories...\n', '644');
+  F('/var/log/auth.log', 'Aug  5 08:02:11 lab sshd[521]: Server listening on 0.0.0.0 port 22.\nAug  5 09:14:35 lab sshd[642]: Failed password for invalid user admin from 192.168.1.77 port 45678 ssh2\nAug  5 11:02:58 lab sshd[811]: Accepted publickey for user from 10.0.0.55 port 52310 ssh2\nAug  5 12:40:19 lab sudo:     user : TTY=pts/0 ; PWD=/home/user ; USER=root ; COMMAND=/usr/bin/apt update\n', '640');
+  F('/var/log/access.log', '192.168.1.23 - - [05/Aug/2026:09:00:01 +0000] "GET / HTTP/1.1" 200 1245\n192.168.1.23 - - [05/Aug/2026:09:00:05 +0000] "GET /index.html HTTP/1.1" 200 5678\n10.0.0.55 - - [05/Aug/2026:09:01:12 +0000] "GET /about HTTP/1.1" 200 2341\n10.0.0.55 - - [05/Aug/2026:09:01:40 +0000] "GET /contact HTTP/1.1" 404 456\n192.168.1.23 - - [05/Aug/2026:09:02:03 +0000] "GET /products HTTP/1.1" 200 3456\n192.168.1.77 - - [05/Aug/2026:09:03:22 +0000] "GET /admin HTTP/1.1" 403 312\n10.0.0.55 - - [05/Aug/2026:09:04:55 +0000] "GET /index.html HTTP/1.1" 200 5678\n172.16.0.9 - - [05/Aug/2026:09:05:30 +0000] "GET /blog HTTP/1.1" 200 7890\n192.168.1.23 - - [05/Aug/2026:09:06:11 +0000] "GET /index.html HTTP/1.1" 200 5678\n10.0.0.55 - - [05/Aug/2026:09:07:02 +0000] "GET /shop HTTP/1.1" 200 4567\n192.168.1.77 - - [05/Aug/2026:09:08:44 +0000] "GET /login HTTP/1.1" 200 8901\n10.0.0.55 - - [05/Aug/2026:09:09:10 +0000] "GET /index.html HTTP/1.1" 200 5678\n192.168.1.23 - - [05/Aug/2026:09:10:33 +0000] "GET /products HTTP/1.1" 200 3456\n172.16.0.9 - - [05/Aug/2026:09:11:51 +0000] "GET /about HTTP/1.1" 200 2341\n10.0.0.55 - - [05/Aug/2026:09:12:20 +0000] "GET /index.html HTTP/1.1" 200 5678\n', '644');
+  F('/var/www/index.html', '<!DOCTYPE html>\n<html>\n<head><title>Lab Server</title></head>\n<body>\n<h1>سلام! این سرور آزمایشگاهی من است 🐧</h1>\n</body>\n</html>\n', '644');
+  F('/tmp/test.txt', 'temporary\n', '644');
+  F('/usr/bin/ls', '', '755'); F('/usr/bin/cat', '', '755'); F('/usr/bin/grep', '', '755'); F('/usr/bin/python3', '', '755'); F('/usr/bin/tar', '', '755');
+}
+
+/* ---------- missions ---------- */
+const MISSIONS = [
+  { id:'m2', sec:2, title:'شناخت سیستم', icon:'🧭', desc:'تمرین بخش ۲ — uname، os-release و man', steps:[
+    { d:'اجرای uname -a', t:'uname -a' },
+    { d:'اجرای uname -r', t:'uname -r' },
+    { d:'خواندن /etc/os-release', t:'cat /etc/os-release' },
+  ]},
+  { id:'m3', sec:3, title:'پوسته و alias', icon:'🐚', desc:'تمرین بخش ۳ — ll، تاریخچه و Ctrl+R', steps:[
+    { d:'ساخت alias ll', t:'alias ll' },
+    { d:'استفاده از ll', t:'ll' },
+    { d:'جستجوی glob با *.txt', t:'*.txt', any:true },
+  ]},
+  { id:'m5', sec:5, title:'ساخت و مدیریت فایل‌ها', icon:'📁', desc:'تمرین بخش ۵ — mkdir, touch, cp, mv, rm', steps:[
+    { d:'ساخت پوشه linux-practice', t:'mkdir linux-practice' },
+    { d:'ساخت ۳ فایل در آن', t:'touch' },
+    { d:'کپی یک فایل', t:'cp' },
+    { d:'تغییر نام فایل', t:'mv' },
+    { d:'حذف یک فایل', t:'rm' },
+    { d:'ساخت a/b/c تو در تو', t:'mkdir -p a/b/c' },
+  ]},
+  { id:'m6', sec:6, title:'خواندن فایل‌ها و لاگ‌ها', icon:'📜', desc:'تمرین بخش ۶ — head, tail, wc, nl', steps:[
+    { d:'مشاهده ۵ خط اول syslog', t:'head -5 /var/log/syslog' },
+    { d:'مشاهده ۵ خط آخر syslog', t:'tail -5 /var/log/syslog' },
+    { d:'شمارش خطوط فایل', t:'wc -l' },
+  ]},
+  { id:'m7', sec:7, title:'مجوزهای دسترسی', icon:'🔐', desc:'تمرین بخش ۷ — chmod', steps:[
+    { d:'ساخت اسکریپت hello.sh', t:'hello.sh', after:true },
+    { d:'دادن مجوز اجرا (chmod +x)', t:'chmod +x hello.sh' },
+    { d:'اجرای ./hello.sh', t:'./hello.sh' },
+    { d:'قفل کردن با chmod 600', t:'chmod 600' },
+  ]},
+  { id:'m11', sec:11, title:'جستجوی فایل و متن', icon:'🔍', desc:'تمرین بخش ۱۱ — find و grep', steps:[
+    { d:'یافتن فایل‌های .conf با find', and:['find','-name'] },
+    { d:'جستجوی واژه port با grep', and:['grep','port'] },
+  ]},
+  { id:'m12', sec:12, title:'لوله‌ها و پردازش متن', icon:'🧵', desc:'تمرین بخش ۱۲ — pipe, cut, sort, uniq', steps:[
+    { d:'استخراج کاربران از passwd', t:'cut -d: -f1 /etc/passwd', any:true },
+    { d:'مرتب‌سازی و شمارش', t:'uniq -c', any:true },
+    { d:'۱۰ IP برتر از access.log', t:'awk', any:true },
+  ]},
+  { id:'m13', sec:13, title:'تغییر مسیر جریان‌ها', icon:'🔀', desc:'تمرین بخش ۱۳ — > و >>', steps:[
+    { d:'ذخیره خروجی در فایل', t:'ls -la /etc >' },
+    { d:'افزودن date به انتهای فایل', t:'date >>' },
+    { d:'بررسی نتیجه با cat', t:'cat etc-list.txt' },
+  ]},
+];
+
+/* ---------- mission tracking & checking ---------- */
+let vExecLines = [];
+const toEn = s => String(s).replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
+function termRecord(line){ vExecLines.push(line.trim()); if(vExecLines.length > 200) vExecLines.shift(); }
+/* does an executed command line satisfy a mission step? */
+function stepMatch(line, st){
+  if(!line) return false;
+  const t = st.t;
+  if(st.word) return line.split(/\s+/).includes(t);
+  if(st.any) return line.includes(t);
+  if(st.and) return st.and.every(w => line.includes(w));
+  if(st.after) return /^(echo|printf|touch|tee|cat)\b/.test(line) && line.includes(t);
+  return line === t || line.startsWith(t + ' ') || line.startsWith(t);
+}
+function completeMissionExercise(m){
+  const idx = DATA.sections.findIndex(s => toEn(s.numBadge) === String(m.sec));
+  if(idx < 0) return;
+  const k = 'ex-'+idx+'-0';
+  const cb = document.querySelector('#course input[data-k="'+k+'"]');
+  if(cb && !cb.checked){
+    cb.checked = true;
+    cb.dispatchEvent(new Event('change')); // bound listener persists + updates visuals
+  }
+}
+function termCheckMissions(){
+  let anyChanged = false;
+  let anyDone = false;
+  MISSIONS.forEach(m=>{
+    const doneSet = termData.missions[m.id] || (termData.missions[m.id] = []);
+    let changed = false;
+    m.steps.forEach((st,i)=>{
+      if(doneSet.includes(i)) return;
+      if(vExecLines.some(l=>stepMatch(l,st))){ doneSet.push(i); changed = true; }
+    });
+    if(changed){
+      anyChanged = true;
+      if(doneSet.length === m.steps.length){
+        anyDone = true;
+        termOut('<div class="tl-sep"></div>');
+        termOut('<div class="tl-ok">🎉 مأموریت «'+m.title+'» کامل شد!'+(m.sec? ' تمرین بخش '+m.sec+' در دوره هم تیک خورد.':'')+'</div>');
+        completeMissionExercise(m);
+      }
+    }
+  });
+  if(anyChanged){ termSave(); renderMissions(); if(anyDone) renderProgress(); }
+}
+
+/* ---------- mission UI ---------- */
+function renderMissions(){
+  const el = document.getElementById('term-missions');
+  const doneCount = MISSIONS.filter(m => (termData.missions[m.id]||[]).length === m.steps.length).length;
+  let html = '<div class="term-missions-head">🎯 مأموریت‌ها <b>'+toFa(doneCount)+' / '+toFa(MISSIONS.length)+'</b></div>';
+  MISSIONS.forEach(m=>{
+    const doneSet = termData.missions[m.id] || [];
+    const isDone = doneSet.length === m.steps.length;
+    html += '<div class="term-mission'+(isDone?' done':'')+'" data-mid="'+m.id+'">'+
+      '<div class="tm-head"><span class="tm-ico">'+m.icon+'</span>'+m.title+'<span class="tm-prog">'+toFa(doneSet.length)+'/'+toFa(m.steps.length)+'</span></div>'+
+      '<div class="tm-steps">'+m.steps.map((st,i)=>'<div class="tm-step'+(doneSet.includes(i)?' ok':'')+'"><span class="dot"></span>'+st.d+'</div>').join('')+'</div></div>';
+  });
+  el.innerHTML = html;
+  el.querySelectorAll('.term-mission').forEach(div=>{
+    div.addEventListener('click', ()=>{
+      document.querySelectorAll('.term-mission').forEach(x=>x.classList.remove('sel'));
+      div.classList.add('sel');
+      const m = MISSIONS.find(x=>x.id === div.getAttribute('data-mid'));
+      if(!m) return;
+      const doneSet = termData.missions[m.id] || [];
+      termOut('<div class="tl-sep"></div>');
+      termInfo('🎯 '+m.desc);
+      termPrint('دستورات این مأموریت:');
+      m.steps.forEach((st,i)=>termPrint('  '+(doneSet.includes(i)?'✅':'▫️')+' '+st.d+'   →   '+st.t));
+    });
+  });
+}
+
+/* ---------- terminal init ---------- */
+const CMD_NAMES = ['pwd','ls','cd','mkdir','touch','rm','cp','mv','cat','head','tail','wc','nl','echo','chmod','find','grep','sort','uniq','cut','awk','whoami','hostname','uname','date','uptime','id','clear','help','man','history','alias','tree','sudo'];
+function autocomplete(input){
+  const val = input.value;
+  const last = val.split(/\s+/).pop() || '';
+  if(!last){ return; }
+  let cands;
+  if(!val.includes(' ')){
+    cands = CMD_NAMES.filter(c=>c.startsWith(last)).concat(Object.keys(vAliases).filter(a=>a.startsWith(last)));
+  } else {
+    const items = vListDir(vCwd)||[];
+    cands = items.filter(n=>n.startsWith(last));
+  }
+  cands = [...new Set(cands)].sort();
+  if(cands.length === 1){
+    input.value = val.slice(0, val.length-last.length) + cands[0] + (val.includes(' ')?'':' ');
+  } else if(cands.length > 1){
+    termOut('<div class="tl-info">'+cands.join('   ')+'</div>');
+  }
+}
+function termBanner(){
+  termOut('<div class="tl-info">🐧 Linux Lab v1 — ترمینال شبیه‌سازی‌شده برای تمرین بخش‌های پایه دوره.</div>');
+  termOut('<div class="tl-info">دستور <b>help</b> را تایپ کنید تا فهرست کامل دستورات را ببینید. برای دیدن مأموریت‌ها، روی کارت‌های کنار صفحه کلیک کنید.</div>');
+}
+function initTerminal(){
+  termLoad();
+  vSeed();
+  renderMissions();
+  termBanner();
+  const input = document.getElementById('term-in');
+  const resetBtn = document.getElementById('term-reset');
+  let armTimer = null;
+  input.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){
+      const line = input.value.trim();
+      input.value = '';
+      if(line){
+        termRecord(line);
+        termExec(line);
+        termCheckMissions();
+        termSave();
+      }
+    } else if(e.key === 'ArrowUp'){
+      e.preventDefault();
+      if(vHistIdx > 0){ vHistIdx--; input.value = vHist[vHistIdx]; }
+    } else if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      if(vHistIdx < vHist.length){ vHistIdx++; input.value = vHistIdx===vHist.length?'':vHist[vHistIdx]; }
+    } else if(e.key === 'Tab'){
+      e.preventDefault();
+      autocomplete(input);
+    } else if(e.ctrlKey && (e.key==='l' || e.key==='L')){
+      e.preventDefault();
+      termClear();
+      termPrompt();
+    }
+  });
+  resetBtn.addEventListener('click', ()=>{
+    if(!armTimer){
+      resetBtn.textContent = 'مطمئنی؟ همه‌چیز بازنشانی شود';
+      armTimer = setTimeout(()=>{ armTimer = null; resetBtn.textContent = '↺ بازنشانی آزمایشگاه'; }, 2600);
+      return;
+    }
+    clearTimeout(armTimer);
+    armTimer = null;
+    resetBtn.textContent = '↺ بازنشانی آزمایشگاه';
+    termData = { missions: {}, history: [] };
+    termSave();
+    vSeed();
+    vHist = []; vHistIdx = -1;
+    vExecLines = [];
+    termClear();
+    renderMissions();
+    termBanner();
+    termPrompt();
+    termInfo('آزمایشگاه بازنشانی شد — همه مأموریت‌ها از نو. موفق باشی! 🐧');
+  });
+  // focus the input whenever the terminal view opens
+  document.querySelectorAll('#nav button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      if(b.getAttribute('data-view')==='terminal') setTimeout(()=>input.focus(),60);
+    });
+  });
+  termPrompt();
+}
+
+/* ---------- command engine ---------- */
+function termOut(html){ const el = document.getElementById('term-out'); el.insertAdjacentHTML('beforeend', html); el.scrollTop = el.scrollHeight; }
+function termEcho(cmd){
+  termOut('<div class="tl-cmd"><span class="tl-p">'+escH(vPathStr(vCwd))+' $ </span>'+escH(cmd)+'</div>');
+}
+function termPrint(txt, cls){ termOut('<div class="'+(cls||'tl-out')+'">'+escH(txt)+'</div>'); }
+function termErr(txt){ termOut('<div class="tl-err">'+escH(txt)+'</div>'); }
+function termInfo(txt){ termOut('<div class="tl-info">'+escH(txt)+'</div>'); }
+function termPrompt(){
+  const homeStr = vPathStr(vHome);
+  const cwd = vPathStr(vCwd) === homeStr ? '~' : vPathStr(vCwd).replace(homeStr,'~');
+  document.getElementById('term-prompt').textContent = vUser+'@'+vHost+':'+cwd+'$';
+}
+function termClear(){ document.getElementById('term-out').innerHTML = ''; }
+
+function parseRedir(words){
+  const out = { args: [], stdout: null, stderr: null, stdin: null };
+  for(let i=0;i<words.length;i++){
+    const w = words[i];
+    if(w === '>' || w === '1>'){ out.stdout = { file: words[++i], append:false }; }
+    else if(w === '>>' || w === '1>>'){ out.stdout = { file: words[++i], append:true }; }
+    else if(w === '2>'){ out.stderr = { file: words[++i], append:false }; }
+    else if(w === '2>>'){ out.stderr = { file: words[++i], append:true }; }
+    else if(w === '2>&1'){ out.merge = true; }
+    else if(/^2>>\S+$/.test(w)){ out.stderr = { file: w.slice(3), append:true }; }
+    else if(/^2>\S+$/.test(w)){ out.stderr = { file: w.slice(2), append:false }; }
+    else if(/^>>\S+$/.test(w)){ out.stdout = { file: w.slice(2), append:true }; }
+    else if(/^>\S+$/.test(w)){ out.stdout = { file: w.slice(1), append:false }; }
+    else if(w === '<'){ out.stdin = words[++i]; }
+    else out.args.push(w);
+  }
+  return out;
+}
+/* split combined short flags (-ri, -lah) — only when every char is a valid flag */
+function splitFlags(args, valid){
+  const out = { flags: [], rest: [] };
+  for(const a of args){
+    if(a.startsWith('-') && a.length > 2 && !a.startsWith('--')){
+      const body = a.slice(1);
+      if([...body].every(ch => valid.includes(ch))){ out.flags.push(...body); }
+      else out.rest.push(a);
+    } else if(a.startsWith('-') && a.length === 2 && !a.startsWith('--')){
+      if(valid.includes(a[1])) out.flags.push(a[1]);
+      else out.rest.push(a);
+    } else out.rest.push(a);
+  }
+  return out;
+}
+function splitWords(s){
+  const re = /([^\s'"`]+|'[^']*'|"[^"]*"|`[^`]*`)/g;
+  const out = []; let m;
+  while((m = re.exec(s))){
+    let w = m[1];
+    if((w.startsWith('\'')&&w.endsWith('\''))||(w.startsWith('"')&&w.endsWith('"'))||(w.startsWith('`')&&w.endsWith('`'))) w = w.slice(1,-1);
+    out.push(w);
+  }
+  return out;
+}
+function splitPipes(s){ return s.split('|').map(p=>p.trim()); }
+
+function globExpand(arg){
+  if(!/[*?\[]/.test(arg)) return [arg];
+  const hasSlash = arg.includes('/');
+  const dirPart = hasSlash ? arg.slice(0, arg.lastIndexOf('/')+1) : '';
+  const pat = hasSlash ? arg.slice(arg.lastIndexOf('/')+1) : arg;
+  const dirArr = vResolve(dirPart || '.');
+  const items = vListDir(dirArr);
+  if(!items) return [arg];
+  const re = new RegExp('^'+pat.replace(/[.+^${}()|\[\]\\]/g,'\\$&').replace(/\*/g,'.*').replace(/\?/g,'.')+'$');
+  const hits = items.filter(n => re.test(n));
+  if(!hits.length) return [arg];
+  return hits.map(n => dirPart + n);
+}
+function expandArgs(words){
+  const out = [];
+  for(const w of words) out.push(...globExpand(w));
+  return out;
+}
+
+/* run one command with optional stdin; returns {out, err, code, dirs:[[...]]} */
+function runCmd(argv, stdin, callbacks){
+  if(!argv.length) return { out:[], err:[], code:0 };
+  const name = argv[0];
+  const args = argv.slice(1);
+  const O = { out:[], err:[], code:0, dirs:[] };
+  const logDir = (d)=>{ if(callbacks && callbacks.onDir) callbacks.onDir(d); };
+  const P = (p)=>{ const a = vResolve(p); logDir(a); return a; };
+  const HOME = vPathStr(vHome);
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const dt = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes());
+
+  const cmd = {
+    pwd(){ O.out.push(vPathStr(vCwd)); },
+    ls(){
+      const lf = splitFlags(args, 'alh');
+      const all = lf.flags.includes('a');
+      const long = lf.flags.includes('l') || lf.flags.includes('h');
+      const path = lf.rest.filter(a=>!a.startsWith('-')).pop() || '.';
+      const arr = P(path);
+      const n = vNode(arr);
+      if(!n){ O.err.push('ls: cannot access \''+path+'\': No such file or directory'); O.code=2; return; }
+      if(n.type === 'file'){ O.out.push(long ? ('-rw-r--r-- 1 user user '+(n.content.length+1)+' '+dt+' '+n.name) : n.name); return; }
+      const items = vListDir(arr);
+      if(!items) return;
+      if(long && items.length){ O.out.push('total '+items.length); }
+      const show = [];
+      if(all){ show.push('.','..'); }
+      show.push(...items);
+      for(const it of show){
+        if(it === '.'){ long && O.out.push('drwxr-xr-x 1 user user 4096 '+dt+' .'); continue; }
+        if(it === '..'){ long && O.out.push('drwxr-xr-x 1 user user 4096 '+dt+' ..'); continue; }
+        const node = n.children[it];
+        if(long){
+          const typ = node.type==='dir'?'d':'-';
+          const mode = node.type==='dir'? node.mode : node.mode;
+          const mStr = modeStr(mode);
+          const size = node.type==='dir'? 4096 : (node.content? node.content.length : 0);
+          O.out.push(typ+mStr+' 1 user user '+size+' '+dt+' '+it);
+        } else {
+          O.out.push(it + (node.type==='dir'?'/':''));
+        }
+      }
+    },
+    cd(){
+      const target = args[0] || '~';
+      if(target === '-'){
+        if(!vLastCwd){ O.err.push('cd: OLDPWD not set'); O.code=1; return; }
+        const back = vLastCwd.slice(); vLastCwd = vCwd.slice(); vCwd = back;
+        O.out.push(vPathStr(vCwd)); return;
+      }
+      const arr = vResolve(target);
+      if(!vIsDir(arr)){ O.err.push('cd: no such file or directory: '+target); O.code=1; return; }
+      vLastCwd = vCwd.slice(); vCwd = arr;
+    },
+    echo(){
+      const s = args.join(' ');
+      O.out.push(s.replace(/\$HOME/g,HOME).replace(/\$USER/g,vUser).replace(/\$PWD/g,vPathStr(vCwd)));
+    },
+    cat(){
+      if(!args.length && stdin != null){ O.out.push(stdin); return; }
+      for(const f of args){
+        const arr = P(f);
+        const c = vReadFile(arr);
+        if(c === null){ O.err.push('cat: '+f+': No such file or directory'); O.code=1; }
+        else O.out.push(c.replace(/\n$/,''));
+      }
+    },
+    touch(){ for(const f of args){ const arr = P(f); if(!vExists(arr)) vMkNode(arr,'file','644',''); } },
+    mkdir(){
+      const pm = args.includes('-p');
+      for(const f of args.filter(a=>!a.startsWith('-'))){
+        const arr = P(f);
+        if(vExists(arr)){ pm || O.err.push('mkdir: cannot create directory \''+f+'\': File exists'); continue; }
+        if(pm){ let cur=[]; for(const seg of arr){ cur.push(seg); const n=vNode(cur); if(!n) vMkNode(cur.slice(),'dir','755'); } }
+        else if(!vMkNode(arr,'dir','755')){ O.err.push('mkdir: cannot create directory \''+f+'\': No such file or directory'); O.code=1; }
+      }
+    },
+    rm(){
+      const rf = splitFlags(args, 'rfR');
+      const rec = rf.flags.includes('r') || rf.flags.includes('R');
+      const force = rf.flags.includes('f');
+      for(const f of rf.rest.filter(a=>!a.startsWith('-'))){
+        const arr = P(f);
+        const n = vNode(arr);
+        if(!n){ force || O.err.push('rm: cannot remove \''+f+'\': No such file or directory'); O.code=1; continue; }
+        if(n.type==='dir' && !rec){ O.err.push('rm: cannot remove \''+f+'\': Is a directory'); O.code=1; continue; }
+        vRemove(arr);
+      }
+    },
+    cp(){
+      const cf = splitFlags(args, 'rR');
+      const rec = cf.flags.includes('r') || cf.flags.includes('R');
+      const paths = cf.rest.filter(a=>!a.startsWith('-'));
+      if(paths.length < 2){ O.err.push('cp: missing destination file operand'); O.code=1; return; }
+      const src = P(paths[0]), dstBase = vResolve(paths[paths.length-1]);
+      for(const sp of paths.slice(0,-1)){
+        const sArr = P(sp); const n = vNode(sArr);
+        if(!n){ O.err.push('cp: cannot stat \''+sp+'\': No such file or directory'); O.code=1; continue; }
+        if(n.type==='dir' && !rec){ O.err.push('cp: -r not specified; omitting directory \''+sp+'\''); O.code=1; continue; }
+        if(paths.length > 2 && !vIsDir(dstBase)){ O.err.push('cp: target \''+paths[paths.length-1]+'\' is not a directory'); O.code=1; continue; }
+        const dstArr = (paths.length>2 || vIsDir(dstBase)) ? dstBase.concat(vBaseName(sArr)) : dstBase;
+        vCopy(sArr, dstArr);
+      }
+    },
+    mv(){
+      const paths = args.filter(a=>!a.startsWith('-'));
+      if(paths.length < 2){ O.err.push('mv: missing destination file operand'); O.code=1; return; }
+      const dstBase = vResolve(paths[paths.length-1]);
+      for(const sp of paths.slice(0,-1)){
+        const sArr = P(sp); const n = vNode(sArr);
+        if(!n){ O.err.push('mv: cannot stat \''+sp+'\': No such file or directory'); O.code=1; continue; }
+        const dstArr = (paths.length>2 || vIsDir(dstBase)) ? dstBase.concat(vBaseName(sArr)) : dstBase;
+        if(vExists(dstArr) && vNode(dstArr).type==='dir' && n.type!=='dir'){ vCopy(sArr, dstArr.concat(vBaseName(sArr))); }
+        else vCopy(sArr, dstArr);
+        vRemove(sArr);
+      }
+    },
+    chmod(){
+      const paths = args.filter(a=>!a.startsWith('-'));
+      if(paths.length < 2){ O.err.push('chmod: missing operand'); O.code=1; return; }
+      const modeArg = paths[0];
+      for(const f of paths.slice(1)){
+        const arr = P(f); const n = vNode(arr);
+        if(!n){ O.err.push('chmod: cannot access \''+f+'\': No such file or directory'); O.code=1; continue; }
+        if(/^[0-7]{3}$/.test(modeArg)){ n.mode = modeArg; }
+        else if(modeArg === '+x'){ n.mode = (n.type==='dir'?'755':'755'); }
+        else if(modeArg === '-x'){ n.mode = (n.type==='dir'?'755':'644'); }
+        else { O.err.push('chmod: invalid mode: \''+modeArg+'\''); O.code=1; }
+      }
+    },
+    head(){
+      let lines = 10, rest = args.slice();
+      const m = rest.find(a=>/^-\d+$/.test(a)); if(m){ lines = parseInt(m.slice(1)); rest = rest.filter(a=>a!==m); }
+      const m2 = rest.find(a=>a==='-n'); if(m2){ lines = parseInt(rest[rest.indexOf(m2)+1]); rest = rest.filter((a,i)=>i!==rest.indexOf(m2)&&i!==rest.indexOf(m2)+1); }
+      const data = rest.length? (vReadFile(P(rest[0]))||'') : (stdin||'');
+      if(!rest.length && stdin==null){} else if(vReadFile(P(rest[0]))===null && rest.length){ O.err.push('head: '+rest[0]+': No such file'); O.code=1; return; }
+      O.out.push(data.split('\n').slice(0,lines).join('\n'));
+    },
+    tail(){
+      let lines = 10, rest = args.slice();
+      const m = rest.find(a=>/^-\d+$/.test(a)); if(m){ lines = parseInt(m.slice(1)); rest = rest.filter(a=>a!==m); }
+      const m2 = rest.find(a=>a==='-n'); if(m2){ const ix=rest.indexOf(m2); lines = parseInt(rest[ix+1]); rest = rest.filter((a,i)=>i!==ix&&i!==ix+1); }
+      const data = rest.length? (vReadFile(P(rest[0]))||'') : (stdin||'');
+      if(!rest.length && stdin==null){} else if(vReadFile(P(rest[0]))===null && rest.length){ O.err.push('tail: '+rest[0]+': No such file'); O.code=1; return; }
+      O.out.push(data.split('\n').slice(-lines).join('\n'));
+    },
+    wc(){
+      const wf = splitFlags(args, 'lwc');
+      const lines = wf.flags.includes('l');
+      const wfiles = wf.rest.filter(a=>!a.startsWith('-'));
+      const data = wfiles.length? (vReadFile(P(wfiles[0]))||'') : (stdin||'');
+      if(wfiles.length && vReadFile(P(wfiles[0]))===null){ O.err.push('wc: no such file'); O.code=1; return; }
+      if(lines){ O.out.push(String(data.split('\n').length)); }
+      else {
+        const w = data.split(/\s+/).filter(Boolean).length;
+        const c = data.length;
+        O.out.push((data.split('\n').length)+' '+w+' '+c);
+      }
+    },
+    nl(){ const data = args.length? (vReadFile(P(args[0]))||'') : (stdin||''); O.out.push(data.split('\n').map((l,i)=>String(i+1).padStart(6,' ')+'\t'+l).join('\n')); },
+    sort(){ const sf = splitFlags(args, 'nru'); const r = sf.flags.includes('r'), n = sf.flags.includes('n'); const sfiles = sf.rest.filter(a=>!a.startsWith('-')); const data = sfiles.length? (vReadFile(P(sfiles[0]))||'') : (stdin||'');
+      let arr = data.split('\n');
+      arr.sort((a,b)=> n ? (parseFloat(a)-parseFloat(b) || a.localeCompare(b)) : a.localeCompare(b));
+      if(r) arr.reverse(); O.out.push(arr.join('\n')); },
+    uniq(){ const c = args.includes('-c'); const data = args.filter(a=>!a.startsWith('-')).length? (vReadFile(P(args.filter(a=>!a.startsWith('-'))[0]))||'') : (stdin||'');
+      const lines = data.split('\n'); const out=[];
+      for(let i=0;i<lines.length;i++){ let cnt=1; while(i+1<lines.length && lines[i+1]===lines[i]){ cnt++; i++; } out.push(c? (String(cnt).padStart(7,' ')+' '+lines[i]) : lines[i]); }
+      O.out.push(out.join('\n')); },
+    cut(){ const d = (args.find(a=>a.startsWith('-d'))||'').slice(2) || '\t'; const f = (args.find(a=>a.startsWith('-f'))||'').slice(2) || '1';
+      const files = args.filter(a=>!a.startsWith('-'));
+      const data = files.length? (vReadFile(P(files[0]))||'') : (stdin||'');
+      if(files.length && vReadFile(P(files[0]))===null){ O.err.push('cut: '+files[0]+': No such file'); O.code=1; return; }
+      const fields = f.split(',').map(Number);
+      O.out.push(data.split('\n').map(l=>fields.map(i=>l.split(d)[i-1]||'').join(d)).join('\n')); },
+    awk(){
+      const prog = args[0]||'';
+      const m = prog.match(/print\s+\$?(\d+|NF|0)/);
+      const files = args.slice(1);
+      const data = files.length? (vReadFile(P(files[0]))||'') : (stdin||'');
+      if(files.length && vReadFile(P(files[0]))===null){ O.err.push('awk: cannot open '+files[0]); O.code=1; return; }
+      if(m){
+        const fld = m[1];
+        O.out.push(data.split('\n').map(l=>{
+          const parts = l.split(/\s+/).filter(Boolean);
+          if(fld==='NF') return String(parts.length);
+          if(fld==='0') return l;
+          const i = parseInt(fld)-1;
+          return i>=0 && i<parts.length ? parts[i] : '';
+        }).join('\n'));
+      } else { O.err.push('awk: فقط الگوی {print $N} پشتیبانی می‌شود'); O.code=1; }
+    },
+    grep(){
+      const gf = splitFlags(args, 'rinv');
+      const ii = gf.flags.includes('i'), nn = gf.flags.includes('n'), rr = gf.flags.includes('r'), vv = gf.flags.includes('v');
+      const rest = gf.rest.filter(a=>!a.startsWith('-'));
+      if(!rest.length){ O.err.push('grep: missing pattern'); O.code=1; return; }
+      const pat = rest[0].toLowerCase();
+      const files = rest.slice(1);
+      const collect = (data, fname) => {
+        data.split('\n').forEach((l,ix)=>{
+          const hay = ii? l.toLowerCase() : l;
+          const hit = vv ? !hay.includes(pat) : hay.includes(pat);
+          if(hit) O.out.push((files.length>1||rr ? fname+':' : '') + (nn? (ix+1)+':' : '') + l);
+        });
+      };
+      if(rr){
+        const base = files.length? P(files[0]) : vCwd.slice();
+        vWalk(base, (arr,n)=>{ if(n.type==='file') collect(n.content||'', vPathStr(arr)); }, 99);
+      } else if(files.length){
+        for(const f of files){
+          const arr = P(f); const c = vReadFile(arr);
+          if(c===null){ O.err.push('grep: '+f+': No such file or directory'); O.code=1; }
+          else collect(c, vBaseName(arr));
+        }
+      } else collect(stdin||'', '');
+    },
+    find(){
+      const nameIdx = args.indexOf('-name');
+      const typeIdx = args.indexOf('-type');
+      const skipIdx = new Set();
+      if(nameIdx>=0){ skipIdx.add(nameIdx); skipIdx.add(nameIdx+1); }
+      if(typeIdx>=0){ skipIdx.add(typeIdx); skipIdx.add(typeIdx+1); }
+      const start = args.filter((a,i)=>!a.startsWith('-') && !skipIdx.has(i)).pop() || '.';
+      const namePat = nameIdx>=0 ? args[nameIdx+1] : null;
+      const typePat = typeIdx>=0 ? args[typeIdx+1] : null;
+      const base = P(start);
+      const TY = { f:'file', d:'dir' };
+      vWalk(base, (arr,n)=>{
+        let ok = true;
+        if(typePat && n.type !== (TY[typePat]||typePat)) ok = false;
+        if(ok && namePat){
+          const re = new RegExp('^'+namePat.replace(/[.+^${}()|\[\]\\]/g,'\\$&').replace(/\*/g,'.*').replace(/\?/g,'.')+'$');
+          if(!re.test(n.name)) ok = false;
+        }
+        if(ok) O.out.push(vPathStr(arr));
+      }, 99);
+    },
+    whoami(){ O.out.push(vUser); },
+    hostname(){ O.out.push(vHost); },
+    uname(){
+      if(args.includes('-a')) O.out.push('Linux '+vHost+' '+vKernel+' #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux');
+      else if(args.includes('-r')) O.out.push(vKernel);
+      else O.out.push('Linux');
+    },
+    date(){ O.out.push(now.toString()); },
+    uptime(){ O.out.push(' '+dt+' up 3 days, 4:22, 1 user, load average: 0.08, 0.12, 0.15'); },
+    id(){ O.out.push('uid=1000('+vUser+') gid=1000('+vUser+') groups=1000('+vUser+'),27(sudo),100(ssh),999(docker)'); },
+    clear(){ callbacks && callbacks.onClear && callbacks.onClear(); },
+    help(){ O.out.push(HELP_TEXT); },
+    man(){ const t = args[0]; O.out.push(MAN[t] || ('No manual entry for '+t)); },
+    history(){ vHist.forEach((h,i)=>O.out.push('  '+(i+1)+'  '+h)); },
+    alias(){
+      const m = args[0] && args[0].match(/^([a-zA-Z_][a-zA-Z0-9_]*)=(.*)$/);
+      if(m){ vAliases[m[1]] = m[2].replace(/^['"]|['"]$/g,''); }
+      else if(args.length===0){ Object.keys(vAliases).forEach(k=>O.out.push('alias '+k+'=\''+vAliases[k]+'\'')); }
+      else { const k = args[0].replace(/^['"]|['"]$/g,''); O.out.push('alias '+k+'=\''+(vAliases[k]||'')+'\''); }
+    },
+    tree(){
+      const base = args.filter(a=>!a.startsWith('-')).pop() || '.';
+      const arr = P(base);
+      const draw = (a, prefix, depth) => {
+        if(depth < 0) return;
+        const n = vNode(a);
+        if(n && n.type === 'dir'){
+          O.out.push(prefix + vBaseName(a) + '/');
+          const kids = vListDir(a)||[];
+          kids.forEach((k,i)=>{
+            const last = i === kids.length-1;
+            draw(a.concat(k), prefix+(last?'   ':'│  '), depth-1);
+          });
+        } else {
+          O.out.push(prefix + vBaseName(a));
+        }
+      };
+      draw(arr, '', 1);
+    },
+    sudo(){ const rest = [name].concat(args); /* re-dispatch stripped */ cmd[rest[0]||'pwd'] ? null : null; },
+  };
+  // sudo: strip and re-run
+  if(name === 'sudo'){
+    return runCmd(argv.slice(1), stdin, callbacks);
+  }
+  // executing a script by path (./hello.sh, /tmp/x.sh, ...)
+  if(name.includes('/') && !cmd[name]){
+    const arr = vResolve(name);
+    const n = vNode(arr);
+    if(!n){ O.err.push('bash: '+name+': No such file or directory'); O.code=127; }
+    else if(n.type !== 'file'){ O.err.push('bash: '+name+': Is a directory'); O.code=126; }
+    else if(!((parseInt(n.mode[0],10)||0) & 1)){ O.err.push('bash: '+vPathStr(arr)+': Permission denied'); O.code=126; }
+    else {
+      let ran = false;
+      (n.content||'').split('\n').forEach(l=>{
+        const m = l.match(/^echo\s+(.+)$/);
+        if(m){ ran = true; O.out.push(m[1].replace(/^['"]|['"]$/g,'').replace(/\$HOME/g,HOME).replace(/\$USER/g,vUser)); }
+      });
+      if(!ran) O.out.push('(اسکریپت اجرا شد — خروجی نداشت)');
+    }
+    return O;
+  }
+  if(cmd[name]) cmd[name]();
+  else O.err.push(name+': command not found');
+  if(name==='clear') O.clear = true;
+  return O;
+}
+
+function modeStr(mode){
+  const b = parseInt(mode[0],10); const g = parseInt(mode[1],10); const o = parseInt(mode[2],10);
+  const f = x => (x&4?'r':'-')+(x&2?'w':'-')+(x&1?'x':'-');
+  return f(b)+f(g)+f(o);
+}
+
+const HELP_TEXT = [
+  'دستورات در دسترس:',
+  '  pwd  ·  ls [-l -a -la]  ·  cd [path|~|-]',
+  '  mkdir [-p]  ·  touch  ·  rm [-r -f]  ·  cp [-r]  ·  mv',
+  '  cat  ·  head [-n N]  ·  tail [-n N]  ·  wc [-l]  ·  nl',
+  '  echo  ·  chmod (600/644/755/+x)  ·  find  ·  grep [-ri]',
+  '  sort [-n -r]  ·  uniq [-c]  ·  cut -d: -fN  ·  awk \'{print $N}\'',
+  '  whoami  ·  hostname  ·  uname [-a -r]  ·  date  ·  uptime  ·  id',
+  '  tree  ·  man CMD  ·  alias  ·  history  ·  clear  ·  help',
+  '',
+  'لوله (|) و تغییر مسیر (>, >>, 2>, 2>&1, <) پشتیبانی می‌شود.',
+  'مثال: cat /var/log/access.log | awk \'{print $1}\' | sort | uniq -c | sort -rn | head -10',
+].join('\n');
+
+const MAN = {
+  ls: 'ls — فهرست فایل‌ها\n  ls [گزینه‌ها] [مسیر]\n  -l جزئیات · -a فایل‌های مخفی · -h حجم خوانا',
+  cd: 'cd — تغییر پوشه\n  cd [مسیر] · cd ~ خانه · cd - پوشه قبلی',
+  cat: 'cat — نمایش محتویات فایل',
+  mkdir: 'mkdir — ساخت پوشه\n  mkdir [-p] name…  (-p ساخت تو در تو)',
+  rm: 'rm — حذف فایل/پوشه\n  rm [-r] [-f] name…  (-r برای پوشه)',
+  cp: 'cp — کپی\n  cp [-r] source destination',
+  mv: 'mv — انتقال / تغییر نام',
+  chmod: 'chmod — تغییر مجوزها\n  chmod 755 file · chmod +x file · chmod 600 file',
+  grep: 'grep — جستجوی متن\n  grep [-i -n -r -v] pattern file…',
+  find: 'find — جستجوی فایل‌ها\n  find path -name \'*.conf\' -type f',
+  head: 'head — نمایش ابتدای فایل\n  head [-n N] file',
+  tail: 'tail — نمایش انتهای فایل\n  tail [-n N] file',
+  sort: 'sort — مرتب‌سازی خطوط\n  sort [-n -r]',
+  uniq: 'uniq — حذف تکراری‌های متوالی\n  uniq [-c]',
+  cut: 'cut — برش ستون‌ها\n  cut -d: -f1 file',
+  awk: 'awk — پردازش متن\n  awk \'{print $1}\' file',
+  wc: 'wc — شمارش\n  wc [-l] file',
+  tree: 'tree — نمایش درختی پوشه‌ها',
+  history: 'history — تاریخچه دستورات',
+  alias: 'alias — نام مستعار\n  alias ll=\'ls -lah\'',
+};
+
+/* execute a full command line (with pipes, redirection, aliases) */
+function termExec(line){
+  vHist.push(line); vHistIdx = vHist.length; vCmdCount++;
+  termEcho(line);
+  // alias expansion (first word)
+  const first = line.trim().split(/\s+/)[0];
+  if(vAliases[first] && first !== 'alias'){
+    line = line.trim().replace(/^\S+/, vAliases[first]);
+  }
+  const segments = line.split(/(&&|\|\||;)/).filter(Boolean);
+  let pending = 'seq';
+  let overallCode = 0;
+  let curSeg = '';
+  const runOne = (seg) => {
+    const pipes = splitPipes(seg);
+    let stdin = null;
+    let finalOut = [];
+    let finalErr = [];
+    let redirects = null;
+    for(let pi=0; pi<pipes.length; pi++){
+      const words = splitWords(pipes[pi]);
+      const redir = parseRedir(words);
+      const args = expandArgs(redir.args);
+      const res = runCmd(args, stdin, {
+        onDir: d=>{},
+        onClear: ()=>{ termClear(); }
+      });
+      finalErr = finalErr.concat(res.err);
+      if(res.clear){ finalOut = []; finalErr = []; }
+      if(pi === pipes.length-1){
+        finalOut = res.out;
+        redirects = redir;
+      } else {
+        stdin = res.out.join('\n');
+      }
+    }
+    // apply redirection
+    if(redirects && redirects.stdout){
+      const arr = vResolve(redirects.stdout.file);
+      const content = finalOut.join('\n') + (finalOut.length?'\n':'');
+      if(!vExists(arr)) vMkNode(arr,'file','644','');
+      redirects.stdout.append ? vAppendFile(arr, content) : vWriteFile(arr, content);
+      finalOut = [];
+    }
+    if(redirects && redirects.stderr){
+      const arr = vResolve(redirects.stderr.file);
+      const content = finalErr.join('\n') + (finalErr.length?'\n':'');
+      if(!vExists(arr)) vMkNode(arr,'file','644','');
+      redirects.stderr.append ? vAppendFile(arr, content) : vWriteFile(arr, content);
+      finalErr = [];
+    }
+    finalOut.forEach(t=>termPrint(t));
+    finalErr.forEach(t=>termErr(t));
+  };
+  for(const seg of segments){
+    const s = seg.trim();
+    if(s === '&&'){ pending = 'and'; continue; }
+    if(s === '||'){ pending = 'or'; continue; }
+    if(s === ';'){ pending = 'seq'; continue; }
+    const okSoFar = (pending==='seq') || (pending==='and' && overallCode===0) || (pending==='or' && overallCode!==0);
+    if(okSoFar) runOne(s);
+    pending = 'seq';
+  }
+  termPrompt();
+}
+
+renderCourse();
+renderProgress();
+renderCheatsheet();
+renderGlossary();
+renderDiagrams();
+initFlashcards();
+initTerminal();
+
+/* ---------- PWA: service worker ---------- */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('linux-roadmap-sw.js', { scope: '/' })
+    .then(reg => { if(reg.active) console.log('[PWA] SW active:', reg.scope); })
+    .catch(() => {});
+}
+
+/* ---------- PWA: install prompt ---------- */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // show a subtle install banner after 30 seconds
+  setTimeout(() => {
+    if(!deferredPrompt) return;
+    const banner = document.createElement('div');
+    banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--acc2);border-radius:14px;padding:14px 22px;color:var(--tx);font-family:Vazirmatn,Tahoma,sans-serif;font-size:13.5px;font-weight:700;z-index:999;display:flex;align-items:center;gap:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);cursor:pointer;animation:fadeIn .4s ease;';
+    banner.innerHTML = '📲 نصب اپ روی گوشی <span style="color:var(--acc);font-size:12px;font-weight:500">دسترسی سریع + آفلاین</span>';
+    banner.addEventListener('click', () => { deferredPrompt.prompt(); banner.remove(); });
+    document.body.appendChild(banner);
+    setTimeout(() => { if(banner.parentNode) banner.remove(); }, 15000);
+  }, 30000);
+});
+
+/* ---------- PWA: daily flashcard reminder notification ---------- */
+const NOTIF_KEY = 'linuxroadmap_notif_v1';
+function requestNotifPermission(){
+  if(!('Notification' in window) || Notification.permission !== 'default') return;
+  // ask after user has used the app for a bit (deferred, gentle)
+  setTimeout(() => {
+    if(Notification.permission !== 'default') return;
+    Notification.requestPermission().then(p => {
+      if(p === 'granted') scheduleDailyReminder();
+    });
+  }, 120000); // 2 minutes after page load
+}
+function scheduleDailyReminder(){
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  // clear any existing scheduled notification for today
+  const today = new Date();
+  const notifyTime = new Date(today);
+  notifyTime.setHours(9, 0, 0, 0); // 9:00 AM local time
+  if(notifyTime <= today) notifyTime.setDate(notifyTime.getDate() + 1);
+  const ms = notifyTime.getTime() - today.getTime();
+  setTimeout(() => {
+    const notifData = JSON.parse(localStorage.getItem(NOTIF_KEY) || '{"last":0}');
+    const now = Date.now();
+    if(now - notifData.last < 20 * 3600000) return; // don't spam within 20 hours
+    notifData.last = now;
+    localStorage.setItem(NOTIF_KEY, JSON.stringify(notifData));
+    // check flashcard due count
+    let dueCount = 0;
+    try {
+      const srsData = JSON.parse(localStorage.getItem('linuxroadmap_srs_v1') || '{}');
+      const cards = srsData.cards || {};
+      dueCount = Object.values(cards).filter(c => c.seen && c.due <= now).length;
+    } catch(_){}
+    const body = dueCount > 0
+      ? dueCount + ' کارت برای مرور امروز داری — ۵ دقیقه وقت بذار و مرور کن! 🧠'
+      : 'وقت تمرین لینوکسه! امروز یه بخش جدید از دوره رو شروع کن 🐧';
+    const n = new Notification('🐧 نقشه راه لینوکس', {
+      body,
+      icon: 'linux-roadmap-icon.svg',
+      badge: 'linux-roadmap-icon.svg',
+      tag: 'linux-roadmap-daily',
+      requireInteraction: false,
+      vibrate: [200, 100, 200],
+      lang: 'fa',
+      dir: 'rtl'
+    });
+    n.addEventListener('click', () => {
+      window.focus();
+      if(self.clients && self.clients.openWindow) self.clients.openWindow(location.origin);
+    });
+    // reschedule for next day
+    scheduleDailyReminder();
+  }, ms);
+}
+// only request permission on user gesture (click anywhere)
+document.addEventListener('click', function once(){
+  document.removeEventListener('click', once);
+  requestNotifPermission();
+}, { once: true });
+
+const crumb = document.getElementById('crumbCourse');
+crumb.textContent = toFa(DATA.sections.length)+' بخش · '+toFa(DATA.commandCount)+' دستور · '+toFa(DATA.glossary.length)+' واژه';
+
+if(location.hash.startsWith('#sec-')){
+  const n = parseInt(location.hash.slice(5),10);
+  if(!isNaN(n) && DATA.sections[n]){ setTimeout(()=>showSection(n),60); }
+}
+})();
+</script>
+</body>
+</html>
